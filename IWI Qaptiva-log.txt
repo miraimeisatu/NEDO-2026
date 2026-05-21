@@ -1,0 +1,61 @@
+================================================================================
+【実験ログ（CSV用）】
+n_nodes,5,N_sub,3,QAOA_P1_sec,0.01,QAOA_P2_sec,4.40,VRP_P1_sec,120.08,VRP_P2_sec,0.04,Total_sec,135.88,method,QAOA+ClusterSplit+Qaptiva,clusters,2
+n_nodes=5 | N_sub=3 | QAOA_P1: 0.0s | QAOA_P2: 4.4s | VRP_P1: 120.1s | VRP_P2: 0.0s | 合計: 135.9s | Clusters: 2
+================================================================================
+
+================================================================================
+【実験ログ（CSV用）】
+n_nodes,10,N_sub,5,QAOA_P1_sec,0.00,QAOA_P2_sec,4.53,VRP_P1_sec,123.78,VRP_P2_sec,0.28,Total_sec,137.77,method,QAOA+ClusterSplit+Qaptiva,clusters,2
+n_nodes=10 | N_sub=5 | QAOA_P1: 0.0s | QAOA_P2: 4.5s | VRP_P1: 123.8s | VRP_P2: 0.3s | 合計: 137.8s | Clusters: 2
+================================================================================
+
+================================================================================
+【実験ログ（CSV用）】
+n_nodes,15,N_sub,8,QAOA_P1_sec,0.00,QAOA_P2_sec,4.54,VRP_P1_sec,244.55,VRP_P2_sec,0.47,Total_sec,260.73,method,QAOA+ClusterSplit+Qaptiva,clusters,2
+n_nodes=15 | N_sub=8 | QAOA_P1: 0.0s | QAOA_P2: 4.5s | VRP_P1: 244.6s | VRP_P2: 0.5s | 合計: 260.7s | Clusters: 2
+================================================================================
+
+================================================================================
+【実験ログ（CSV用）】
+n_nodes,20,N_sub,10,QAOA_P1_sec,0.01,QAOA_P2_sec,4.46,VRP_P1_sec,364.14,VRP_P2_sec,0.77,Total_sec,382.83,method,QAOA+ClusterSplit+Qaptiva,clusters,2
+n_nodes=20 | N_sub=10 | QAOA_P1: 0.0s | QAOA_P2: 4.5s | VRP_P1: 364.1s | VRP_P2: 0.8s | 合計: 382.8s | Clusters: 2
+================================================================================
+
+================================================================================
+【実験ログ（CSV用）】
+n_nodes,25,N_sub,13,QAOA_P1_sec,0.01,QAOA_P2_sec,4.53,VRP_P1_sec,365.32,VRP_P2_sec,1.29,Total_sec,387.46,method,QAOA+ClusterSplit+Qaptiva,clusters,2
+n_nodes=25 | N_sub=13 | QAOA_P1: 0.0s | QAOA_P2: 4.5s | VRP_P1: 365.3s | VRP_P2: 1.3s | 合計: 387.5s | Clusters: 2
+================================================================================
+
+================================================================================
+【実験ログ（CSV用）】
+n_nodes,30,N_sub,15,QAOA_P1_sec,0.01,QAOA_P2_sec,4.48,VRP_P1_sec,364.59,VRP_P2_sec,2.60,Total_sec,387.92,method,QAOA+ClusterSplit+Qaptiva,clusters,2
+n_nodes=30 | N_sub=15 | QAOA_P1: 0.0s | QAOA_P2: 4.5s | VRP_P1: 364.6s | VRP_P2: 2.6s | 合計: 387.9s | Clusters: 2
+================================================================================
+
+================================================================================
+【実験ログ（CSV用）】
+n_nodes,35,N_sub,18,QAOA_P1_sec,0.01,QAOA_P2_sec,4.46,VRP_P1_sec,604.31,VRP_P2_sec,3.01,Total_sec,623.05,method,QAOA+ClusterSplit+Qaptiva,clusters,2
+n_nodes=35 | N_sub=18 | QAOA_P1: 0.0s | QAOA_P2: 4.5s | VRP_P1: 604.3s | VRP_P2: 3.0s | 合計: 623.1s | Clusters: 2
+================================================================================
+
+================================================================================
+【実験ログ（CSV用）】
+n_nodes,40,N_sub,14,QAOA_P1_sec,0.01,QAOA_P2_sec,4.51,VRP_P1_sec,905.24,VRP_P2_sec,5.65,Total_sec,929.69,method,QAOA+ClusterSplit+Qaptiva,clusters,3
+n_nodes=40 | N_sub=14 | QAOA_P1: 0.0s | QAOA_P2: 4.5s | VRP_P1: 905.2s | VRP_P2: 5.6s | 合計: 929.7s | Clusters: 3
+================================================================================
+
+================================================================================
+【実験ログ（CSV用）】
+n_nodes,45,N_sub,15,QAOA_P1_sec,0.01,QAOA_P2_sec,2.33,VRP_P1_sec,904.14,VRP_P2_sec,4.74,Total_sec,920.67,method,QAOA+ClusterSplit+Qaptiva,clusters,3
+n_nodes=45 | N_sub=15 | QAOA_P1: 0.0s | QAOA_P2: 2.3s | VRP_P1: 904.1s | VRP_P2: 4.7s | 合計: 920.7s | Clusters: 3
+================================================================================
+
+
+================================================================================
+【実験ログ（CSV用）】
+n_nodes,50,N_sub,17,QAOA_P1_sec,0.01,QAOA_P2_sec,4.53,VRP_P1_sec,905.01,VRP_P2_sec,10.07,Total_sec,932.59,method,QAOA+ClusterSplit+Qaptiva,clusters,3
+n_nodes=50 | N_sub=17 | QAOA_P1: 0.0s | QAOA_P2: 4.5s | VRP_P1: 905.0s | VRP_P2: 10.1s | 合計: 932.6s | Clusters: 3
+================================================================================
+
