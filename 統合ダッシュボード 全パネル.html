@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CLO 統合ダッシュボード 全パネル 経営者向け利用ガイド</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic UI',sans-serif;background:#f5f6f8;color:#1a1a2e;font-size:14px;line-height:1.7}
+.page{max-width:980px;margin:0 auto;padding:1.5rem 1.5rem 4rem}
+.cover{background:#042C53;color:#fff;border-radius:12px;padding:2rem 2rem 1.75rem;margin-bottom:2rem}
+.cover-eye{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#85B7EB;margin-bottom:.4rem;font-weight:500}
+.cover-title{font-size:24px;font-weight:600;margin-bottom:.4rem}
+.cover-sub{font-size:13px;color:#B5D4F4;margin-bottom:1.2rem}
+.cover-meta{display:grid;grid-template-columns:130px 1fr;gap:3px 12px;background:rgba(255,255,255,.1);border-radius:8px;padding:.75rem 1rem;font-size:12px}
+.cover-meta dt{color:#85B7EB;font-weight:500}
+.cover-meta dd{color:#e0eaf8}
+.toc{background:#fff;border:.5px solid #dde1e7;border-radius:10px;padding:1.1rem 1.4rem;margin-bottom:2rem}
+.toc-title{font-size:14px;font-weight:600;color:#042C53;margin-bottom:.6rem}
+.toc a{display:block;text-decoration:none;font-size:12px;color:#185FA5;padding:2px 0}
+.toc a:hover{text-decoration:underline}
+.toc-group{padding-left:1rem;border-left:2px solid #E6F1FB;margin:.4rem 0 .6rem}
+.toc-group-label{font-size:11px;font-weight:600;color:#888;letter-spacing:.07em;text-transform:uppercase;margin-bottom:2px}
+h1{font-size:19px;font-weight:600;color:#042C53;border-bottom:3px solid #185FA5;padding-bottom:.4rem;margin:2rem 0 1rem}
+h2{font-size:15px;font-weight:600;color:#185FA5;padding-left:.6rem;border-left:4px solid #185FA5;margin:1.5rem 0 .6rem}
+h3{font-size:13px;font-weight:600;color:#333;padding-left:.6rem;border-left:3px solid #B5D4F4;margin:1.1rem 0 .45rem}
+p{color:#333;margin:.35rem 0 .6rem;font-size:13px}
+ul{margin:.3rem 0 .6rem 1.3rem}
+li{margin:.25rem 0;color:#333;font-size:13px}
+table{width:100%;border-collapse:collapse;font-size:12px;margin:.5rem 0 1.1rem}
+th{background:#185FA5;color:#fff;padding:6px 10px;text-align:left;font-weight:500}
+td{padding:6px 10px;border-bottom:.5px solid #dde1e7;vertical-align:top}
+tr:nth-child(even) td{background:#f8f9fb}
+.panel-section{background:#fff;border:.5px solid #dde1e7;border-radius:12px;padding:1.1rem 1.3rem;margin-bottom:1.5rem}
+.panel-header{display:flex;align-items:center;gap:10px;margin-bottom:.75rem;padding-bottom:.6rem;border-bottom:.5px solid #eef0f4}
+.panel-id{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;flex-shrink:0}
+.pid-clo{background:#E6F1FB;color:#0C447C}
+.pid-ma{background:#FAEEDA;color:#633806}
+.pid-sum{background:#EAF3DE;color:#27500A}
+.panel-name{font-size:15px;font-weight:600;color:#042C53}
+.panel-tag{font-size:10px;font-weight:500;padding:2px 8px;border-radius:4px;margin-left:6px}
+.tag-clo{background:#E6F1FB;color:#0C447C}
+.tag-ma{background:#FAEEDA;color:#633806}
+.tag-sum{background:#EAF3DE;color:#27500A}
+.use-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:.6rem 0}
+.use-card{background:#f8f9fb;border-radius:8px;padding:.6rem .75rem;font-size:12px}
+.use-card-label{font-size:10px;font-weight:600;color:#888;margin-bottom:3px;text-transform:uppercase;letter-spacing:.06em}
+.use-card-body{color:#333;line-height:1.45}
+.note{background:#FAEEDA;border-left:3px solid #BA7517;padding:.45rem .7rem;border-radius:0 6px 6px 0;font-size:11px;color:#633806;margin:.4rem 0 .7rem;line-height:1.45}
+.tip{background:#EAF3DE;border-left:3px solid #639922;padding:.45rem .7rem;border-radius:0 6px 6px 0;font-size:11px;color:#27500A;margin:.4rem 0 .7rem;line-height:1.45}
+.qa{background:#fff;border:.5px solid #dde1e7;border-radius:8px;padding:.65rem .9rem;margin:.5rem 0}
+.qa-q{font-size:12px;font-weight:600;color:#042C53;margin-bottom:.25rem}
+.qa-q::before{content:"Q. "}
+.qa-a{font-size:12px;color:#444;line-height:1.5}
+.qa-a::before{content:"A. ";font-weight:600;color:#185FA5}
+.sep{border:none;border-top:2px dashed #dde1e7;margin:2rem 0}
+footer{text-align:center;font-size:11px;color:#999;margin-top:3rem;padding-top:.75rem;border-top:.5px solid #dde1e7}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="cover">
+  <div class="cover-eye">NEDO-4 / IBM 量子自動分割 確定版 v1.7-100</div>
+  <div class="cover-title">CLO 統合ダッシュボード<br>全パネル 経営者向け利用ガイド</div>
+  <div class="cover-sub">Panel A〜M 全13パネルの読み方・活用方法・判断ポイント</div>
+  <dl class="cover-meta">
+    <dt>対象システム</dt><dd>_nedo_4_ibm_確定版v1.7-100.py</dd>
+    <dt>パネル数</dt><dd>全13パネル（A〜H: CLO運用 / I〜L: M&A DD / M: DDサマリ）</dd>
+    <dt>対象読者</dt><dd>物流統括管理者（CLO）・経営幹部・M&A担当役員・物流企画担当者</dd>
+    <dt>作成日</dt><dd>2026年6月</dd>
+  </dl>
+</div>
+
+<div class="toc">
+  <div class="toc-title">目次</div>
+  <div class="toc-group">
+    <div class="toc-group-label">CLO 日常運用パネル（A〜H）</div>
+    <a href="#pa">Panel A — KPI サマリカード</a>
+    <a href="#pb">Panel B — PHASE1 配送ルートマップ</a>
+    <a href="#pcd">Panel C/D/E — インセンティブ・リスク分析</a>
+    <a href="#pfg">Panel F/G/H — 動的配分・処理時間・リスク変化</a>
+  </div>
+  <div class="toc-group">
+    <div class="toc-group-label">M&A・デューデリジェンスパネル（I〜L）</div>
+    <a href="#pi">Panel I — 物流資産価値スコアリングマップ</a>
+    <a href="#pj">Panel J — ネットワーク集中リスク分析</a>
+    <a href="#pk">Panel K — M&Aシナジー試算チャート</a>
+    <a href="#pl">Panel L — デューデリジェンス総合評価レポート</a>
+  </div>
+  <div class="toc-group">
+    <div class="toc-group-label">統合サマリ</div>
+    <a href="#pm">Panel M — M&A物流DDサマリ ダッシュボード</a>
+  </div>
+  <a href="#faq" style="margin-top:.5rem">共通FAQ・注意事項</a>
+</div>
+
+<!-- ═══════════ CLO 日常運用パネル ═══════════ -->
+<h1>CLO 日常運用パネル（Panel A〜H）</h1>
+<p>毎日の配送計画確認・インセンティブ予算管理・リスク監視に使うパネル群です。全フェーズの処理完了後に自動生成されます。</p>
+
+<!-- Panel A -->
+<div class="panel-section" id="pa">
+  <div class="panel-header">
+    <div class="panel-id pid-clo">A</div>
+    <div>
+      <div class="panel-name">KPI サマリカード<span class="panel-tag tag-clo">CLO 運用</span></div>
+      <div style="font-size:11px;color:#666;margin-top:2px">go.Indicator × 11指標　高さ220px</div>
+    </div>
+  </div>
+  <h2>何が表示されるか</h2>
+  <p>全処理結果の主要11指標を横一列に並べた数値カード。最初に確認すべき「経営のダッシュボード」です。</p>
+  <table>
+    <tr><th>#</th><th>KPI名称</th><th>読み方・判断ポイント</th></tr>
+    <tr><td>1</td><td>対象拠点数</td><td>今回の計算に使った配送・集荷拠点の総数。100なら100拠点が最適化対象。</td></tr>
+    <tr><td>2</td><td>VRP総距離P1 (km)</td><td>PHASE 1（静的ルート）の2台合計走行距離。燃料コストの基準値として使用。</td></tr>
+    <tr><td>3</td><td>VRP総距離P2 (km)</td><td>PHASE 2（動的・衛星連動）の走行距離。P1より小さければルート改善効果あり。</td></tr>
+    <tr><td>4</td><td>予算総額 (¥)</td><td>インセンティブ配分の総予算（BUDGET_P2固定値）。</td></tr>
+    <tr><td>5</td><td>P1最適スコア</td><td>PHASE 1のSA-QUBO最適化スコア。大きいほど高スコア拠点を優先選択できている。</td></tr>
+    <tr><td>6</td><td>P2統合スコア</td><td>PHASE 2の統合最適化スコア。リスク・距離・配分を統合した指標。</td></tr>
+    <tr><td>7</td><td>P1選択拠点数</td><td>PHASE 1でインセンティブ対象として選ばれた拠点数。</td></tr>
+    <tr><td>8</td><td>P2選択拠点数</td><td>PHASE 2で動的に選ばれた拠点数。P1と差があれば配分戦略が変わっている。</td></tr>
+    <tr><td>9</td><td>処理時間合計 (s)</td><td>全6フェーズの合計計算時間。67秒前後が目安（n_nodes=100の場合）。</td></tr>
+    <tr><td>10</td><td>クラスタ数</td><td>量子計算のクラスタ分割数（n_nodes=100では9クラスタ）。</td></tr>
+    <tr><td>11</td><td>N_sub</td><td>クラスタあたりの拠点数（12）。小さいほど量子計算が高速。</td></tr>
+  </table>
+  <h2>どう活用するか</h2>
+  <div class="use-grid">
+    <div class="use-card"><div class="use-card-label">毎朝の確認</div><div class="use-card-body">処理時間が急増（+30秒以上）していたら拠点データの異常や計算負荷増大のサイン。</div></div>
+    <div class="use-card"><div class="use-card-label">経営会議報告</div><div class="use-card-body">VRP総距離P1/P2の差を「ルート改善効果」として報告。差が大きいほどP2の衛星連動が有効に機能している。</div></div>
+    <div class="use-card"><div class="use-card-label">予算審議</div><div class="use-card-body">予算総額と選択拠点数から1拠点あたりの平均インセンティブ額を算出して配分の妥当性を確認。</div></div>
+  </div>
+  <div class="tip">タイトルに実行日時・n_nodes・合計処理時間が自動表示されるため、「いつの計算か」を毎回確認できます。</div>
+</div>
+
+<!-- Panel B -->
+<div class="panel-section" id="pb">
+  <div class="panel-header">
+    <div class="panel-id pid-clo">B</div>
+    <div>
+      <div class="panel-name">PHASE1 配送ルートマップ<span class="panel-tag tag-clo">CLO 運用</span></div>
+      <div style="font-size:11px;color:#666;margin-top:2px">Plotly Mapbox / Scattermapbox　高さ600px</div>
+    </div>
+  </div>
+  <h2>何が表示されるか</h2>
+  <p>PHASE 1で算出した2台車両の最適配送ルートを地図上に表示します。車両1（赤線）・車両2（青線）がそれぞれ担当するエリアと配送順序が一目でわかります。</p>
+  <ul>
+    <li>マーカーのサイズはrisk_scoreに比例（大きいほど高リスク拠点）</li>
+    <li>マーカーホバーで拠点名・到着順・risk_score・累積距離を確認できる</li>
+    <li>地図は全拠点の重心座標に自動センタリング・ズーム</li>
+  </ul>
+  <h2>どう活用するか</h2>
+  <div class="use-grid">
+    <div class="use-card"><div class="use-card-label">配送計画の承認</div><div class="use-card-body">2台のルートが地図上で視覚的に確認できる。エリア重複・迂回が大きい場合はクラスタ設定の見直しを検討。</div></div>
+    <div class="use-card"><div class="use-card-label">リスク拠点の特定</div><div class="use-card-body">大きいマーカー（高リスク拠点）が特定エリアに集中している場合、そのエリアへの重点対応を検討。</div></div>
+    <div class="use-card"><div class="use-card-label">役員プレゼン</div><div class="use-card-body">インタラクティブな地図なのでスクロール・ズームができ、特定エリアにフォーカスした説明が可能。</div></div>
+  </div>
+  <div class="note">route_v1（車両2）が空の場合、車両2のルートはスキップされ車両1のみ表示されます。</div>
+</div>
+
+<!-- Panel C/D/E -->
+<div class="panel-section" id="pcd">
+  <div class="panel-header">
+    <div class="panel-id pid-clo">C</div>
+    <div>
+      <div class="panel-name">インセンティブ・リスク分析（C/D/E）<span class="panel-tag tag-clo">CLO 運用</span></div>
+      <div style="font-size:11px;color:#666;margin-top:2px">make_subplots 1行3列　高さ500px</div>
+    </div>
+  </div>
+  <h2>何が表示されるか</h2>
+  <table>
+    <tr><th>サブパネル</th><th>グラフ種類</th><th>内容</th></tr>
+    <tr><td><strong>C</strong></td><td>グループ棒グラフ</td><td>拠点ごとにP1（静的・緑）とP2（動的・赤）のインセンティブ配分額を並べて比較</td></tr>
+    <tr><td><strong>D</strong></td><td>2行ヒートマップ</td><td>全拠点のrisk_score（上段）とincentive_p2（下段）を色の濃淡で一覧表示</td></tr>
+    <tr><td><strong>E</strong></td><td>バブル散布図</td><td>X軸=risk_score、Y軸=incentive_p2、バブルサイズ=配分額。高リスク高配分の相関を可視化</td></tr>
+  </table>
+  <h2>どう活用するか</h2>
+  <div class="use-grid">
+    <div class="use-card"><div class="use-card-label">配分根拠の説明</div><div class="use-card-body">Panel Cで「P1とP2でどの拠点の配分が増減したか」を視覚的に示し、動的最適化の効果を関係者に説明できる。</div></div>
+    <div class="use-card"><div class="use-card-label">リスク集中の発見</div><div class="use-card-body">Panel Dで特定拠点の色が濃い（高リスク・高配分）場合、その拠点への優先対応が必要かを判断。</div></div>
+    <div class="use-card"><div class="use-card-label">配分適正度の確認</div><div class="use-card-body">Panel Eで右上（高リスク高配分）に点が集まるほど配分がリスクに連動している。右下（高リスク低配分）の点は要注意。</div></div>
+  </div>
+</div>
+
+<!-- Panel F/G/H -->
+<div class="panel-section" id="pfg">
+  <div class="panel-header">
+    <div class="panel-id pid-clo">F</div>
+    <div>
+      <div class="panel-name">動的配分・処理時間・リスク変化（F/G/H）<span class="panel-tag tag-clo">CLO 運用</span></div>
+      <div style="font-size:11px;color:#666;margin-top:2px">make_subplots 1行3列　高さ480px</div>
+    </div>
+  </div>
+  <h2>何が表示されるか</h2>
+  <table>
+    <tr><th>サブパネル</th><th>グラフ種類</th><th>内容</th></tr>
+    <tr><td><strong>F</strong></td><td>Redsカラー棒グラフ</td><td>PHASE 2の動的インセンティブ配分額。バーの色がrisk_scoreに連動（赤が濃いほど高リスク）</td></tr>
+    <tr><td><strong>G</strong></td><td>横棒グラフ</td><td>QAOA P1/P2・VRP P1/P2の処理時間内訳（秒）を色分け表示</td></tr>
+    <tr><td><strong>H</strong></td><td>2本折れ線グラフ</td><td>静的リスク（P1基準・青）と動的リスク（P2量子予測・赤点線）の変化。拠点をリスク昇順に並べて表示</td></tr>
+  </table>
+  <h2>どう活用するか</h2>
+  <div class="use-grid">
+    <div class="use-card"><div class="use-card-label">重点対応拠点の特定</div><div class="use-card-body">Panel Fで赤が濃い棒が高リスク拠点。配分額が大きい拠点を優先的に現場フォローアップ。</div></div>
+    <div class="use-card"><div class="use-card-label">IT投資判断</div><div class="use-card-body">Panel GでVRP P1が長い場合は拠点数増加・クラスタ設定の見直しが必要。QAOA時間が長い場合はreps削減を検討。</div></div>
+    <div class="use-card"><div class="use-card-label">リスク変化の把握</div><div class="use-card-body">Panel HでP1（静的）とP2（動的）の乖離が大きい拠点が衛星観測により新たに高リスクと判定された拠点。</div></div>
+  </div>
+  <div class="tip">Panel Hで赤点線（P2）が青線（P1）を大きく上回っている拠点は、衛星データによってリスクが上昇した拠点です。現場への確認・対応を優先してください。</div>
+</div>
+
+<hr class="sep">
+
+<!-- ═══════════ M&A DDパネル ═══════════ -->
+<h1>M&A・物流デューデリジェンスパネル（Panel I〜L）</h1>
+<p>買収検討・事業拡大時の物流ネットワーク評価に特化したパネル群です。買収候補の物流拠点の価値・リスク・統合シナジーを定量化します。</p>
+
+<!-- Panel I -->
+<div class="panel-section" id="pi">
+  <div class="panel-header">
+    <div class="panel-id pid-ma">I</div>
+    <div>
+      <div class="panel-name">物流資産価値スコアリングマップ<span class="panel-tag tag-ma">M&A DD</span></div>
+      <div style="font-size:11px;color:#666;margin-top:2px">Plotly Mapbox / Scattermapbox　高さ620px</div>
+    </div>
+  </div>
+  <h2>何が表示されるか</h2>
+  <p>全拠点に「戦略価値スコア（0〜100点）」を算出し、地図上にバブルとして表示します。</p>
+  <table>
+    <tr><th>スコア構成要素</th><th>重み</th><th>意味</th></tr>
+    <tr><td>動的リスクスコア</td><td>40%</td><td>衛星連動リスクが高い拠点ほど戦略的重要度が高い</td></tr>
+    <tr><td>ネットワーク中心性</td><td>35%</td><td>他拠点との距離的な近さ（ハブ性）。近接中心性の近似値</td></tr>
+    <tr><td>配分効率スコア</td><td>25%</td><td>インセンティブP2÷リスクスコア。少ない配分で高リスクをカバーできる効率性</td></tr>
+  </table>
+  <ul>
+    <li>バブルサイズ・色（緑〜赤）がスコアに比例</li>
+    <li>上位20%の拠点（高価値候補）を自動識別</li>
+    <li>ホバーで拠点名・戦略価値スコア・座標を確認</li>
+  </ul>
+  <h2>どう活用するか</h2>
+  <div class="use-grid">
+    <div class="use-card"><div class="use-card-label">買収優先度の決定</div><div class="use-card-body">スコア上位20%（緑・大バブル）の拠点が「優先買収・統合候補」。買収交渉の初期スクリーニングに直接活用できる。</div></div>
+    <div class="use-card"><div class="use-card-label">拠点統廃合計画</div><td>スコアが低い（赤・小バブル）の拠点は統合後の廃止候補。地図で空間的に確認しながら廃止範囲を検討。</div></div>
+    <div class="use-card"><div class="use-card-label">投資家向け説明</div><div class="use-card-body">地図ビジュアルで「どのエリアの拠点に戦略的価値があるか」を直感的に説明できる。</div></div>
+  </div>
+  <div class="note">戦略価値スコアはリスク・中心性・配分効率の複合指標です。単一の指標ではないため、個別拠点の詳細評価はPanel J・Lと組み合わせて判断してください。</div>
+</div>
+
+<!-- Panel J -->
+<div class="panel-section" id="pj">
+  <div class="panel-header">
+    <div class="panel-id pid-ma">J</div>
+    <div>
+      <div class="panel-name">物流ネットワーク集中リスク分析<span class="panel-tag tag-ma">M&A DD</span></div>
+      <div style="font-size:11px;color:#666;margin-top:2px">make_subplots 1行2列　高さ480px</div>
+    </div>
+  </div>
+  <h2>何が表示されるか</h2>
+  <table>
+    <tr><th>サブパネル</th><th>グラフ種類</th><th>内容</th></tr>
+    <tr><td><strong>J-1</strong></td><td>ヒートマップ（4行×クラスタ数列）</td><td>クラスタごとに「拠点数・平均リスク・平均拠点間距離・総配分額」の4指標を色で比較</td></tr>
+    <tr><td><strong>J-2</strong></td><td>カラー棒グラフ</td><td>拠点別の代替可能性スコア（0〜100%）。緑=代替容易、赤=代替不可能</td></tr>
+  </table>
+  <h3>代替可能性スコアの算出方法</h3>
+  <ul>
+    <li>各拠点から「最近傍距離中央値×2.0km」圏内にある近傍拠点数を計算</li>
+    <li>その比率を代替可能性スコアとして0〜100%で表示</li>
+    <li>閾値はデータに自動適応（n_nodes=100・東京都市圏の場合: 約14km）</li>
+  </ul>
+  <h2>どう活用するか</h2>
+  <div class="use-grid">
+    <div class="use-card"><div class="use-card-label">撤退リスクの評価</div><div class="use-card-body">J-2で赤い棒（代替可能性0%）の拠点は「唯一無二の拠点」。撤退・廃止すると物流が止まる可能性がある高リスク拠点として買収条件に反映。</div></div>
+    <div class="use-card"><div class="use-card-label">クラスタ集中リスク</div><div class="use-card-body">J-1で特定クラスタの平均リスクが高い場合、そのエリア全体がリスク集中地帯。被災・規制変更時の影響範囲を事前評価。</div></div>
+    <div class="use-card"><div class="use-card-label">DD報告書の根拠</div><div class="use-card-body">「代替不可能拠点14/100」という定量値をDD報告書に記載し、物流インフラの脆弱性評価の根拠として使用。</div></div>
+  </div>
+</div>
+
+<!-- Panel K -->
+<div class="panel-section" id="pk">
+  <div class="panel-header">
+    <div class="panel-id pid-ma">K</div>
+    <div>
+      <div class="panel-name">M&Aシナジー試算チャート<span class="panel-tag tag-ma">M&A DD</span></div>
+      <div style="font-size:11px;color:#666;margin-top:2px">make_subplots 1行2列　高さ500px</div>
+    </div>
+  </div>
+  <h2>何が表示されるか</h2>
+  <table>
+    <tr><th>サブパネル</th><th>グラフ種類</th><th>内容</th></tr>
+    <tr><td><strong>K-1</strong></td><td>ウォーターフォールチャート</td><td>現状コスト(P1) → ルート最適化削減 → 配分品質改善 → 統合後推定コスト(P2) の流れを可視化</td></tr>
+    <tr><td><strong>K-2</strong></td><td>正負棒グラフ</td><td>拠点ごとのインセンティブ変化（P2-P1）。緑=増加、赤=減少</td></tr>
+  </table>
+  <h3>シナジー試算の算出方法</h3>
+  <table>
+    <tr><th>項目</th><th>計算式</th><th>前提</th></tr>
+    <tr><td>ルート最適化効果</td><td>(P1距離 − P2距離) × ¥120/km</td><td>単価¥120/km（仮定値）</td></tr>
+    <tr><td>配分品質改善効果</td><td>(P2リスク加重平均 − P1リスク加重平均) × BUDGET × 0.05</td><td>品質向上の換算係数0.05</td></tr>
+    <tr><td>シナジー推定総額</td><td>上記2項目の合計</td><td>—</td></tr>
+  </table>
+  <h2>どう活用するか</h2>
+  <div class="use-grid">
+    <div class="use-card"><div class="use-card-label">買収価格交渉</div><div class="use-card-body">「物流統合によるコスト削減シナジー¥XX,XXX」を買収価格の上乗せ根拠として提示。</div></div>
+    <div class="use-card"><div class="use-card-label">投資回収計算</div><div class="use-card-body">年間シナジー額から買収コストの回収年数を試算するベースラインとして活用。</div></div>
+    <div class="use-card"><div class="use-card-label">感度分析</div><div class="use-card-body">COST_PER_KM（¥120/km）を実際の輸送単価に変えて再実行すると、より精度の高いシナジー試算が得られる。</div></div>
+  </div>
+  <div class="note">¥120/kmは標準的な軽トラック運行コストの参考値です。実際のM&A検討では自社の燃料費・人件費・固定費を含む実績単価に差し替えて感度分析を行ってください。</div>
+</div>
+
+<!-- Panel L -->
+<div class="panel-section" id="pl">
+  <div class="panel-header">
+    <div class="panel-id pid-ma">L</div>
+    <div>
+      <div class="panel-name">デューデリジェンス総合評価レポート<span class="panel-tag tag-ma">M&A DD</span></div>
+      <div style="font-size:11px;color:#666;margin-top:2px">make_subplots 1行2列（polar + table）　高さ520px</div>
+    </div>
+  </div>
+  <h2>何が表示されるか</h2>
+  <table>
+    <tr><th>サブパネル</th><th>内容</th></tr>
+    <tr><td><strong>L-1 レーダーチャート</strong></td><td>5軸スコアを五角形で表示。業界標準ライン（70点）と重ねて比較できる</td></tr>
+    <tr><td><strong>L-2 スコアカード表</strong></td><td>5軸ごとの点数・判定（●△×）・詳細コメントを一覧表示。総合グレード行を色分けで強調</td></tr>
+  </table>
+  <h3>5軸スコアの定義</h3>
+  <table>
+    <tr><th>軸</th><th>算出方法</th><th>高スコアの意味</th></tr>
+    <tr><td>物流効率性</td><td>VRP距離÷拠点数 を最近傍距離×n_nodesで正規化</td><td>少ない走行距離で多くの拠点をカバーできている</td></tr>
+    <tr><td>リスク分散性</td><td>risk_scoreの標準偏差の逆数×100</td><td>特定拠点にリスクが集中していない</td></tr>
+    <tr><td>配分適正度</td><td>リスク順位と配分額順位のスピアマン相関（-1〜+1 → 0〜100点）</td><td>高リスク拠点に高配分が集まっている</td></tr>
+    <tr><td>強靭性</td><td>代替可能拠点比率（最近傍距離中央値×2km圏内に近傍がある比率）</td><td>代替可能な拠点が多く、1拠点停止時の影響が小さい</td></tr>
+    <tr><td>量子最適化効果</td><td>SA-QUBO選択集中率リフト（高スコア拠点への選択の偏り）</td><td>SA-QUBOが効果的に上位スコア拠点を選択している</td></tr>
+  </table>
+  <h3>総合グレード判定基準</h3>
+  <table>
+    <tr><th>グレード</th><th>スコア</th><th>判定コメント</th><th>CLOの対応方針</th></tr>
+    <tr><td style="color:#27500A;font-weight:600">A</td><td>80点以上</td><td>買収・統合に適した高品質な物流ネットワーク。優先推進を推奨。</td><td>買収交渉を積極的に進める</td></tr>
+    <tr><td style="color:#185FA5;font-weight:600">B</td><td>65〜79点</td><td>概ね良好。リスク集中拠点の追加調査を条件に進行可。</td><td>重点拠点の個別調査後に判断</td></tr>
+    <tr><td style="color:#633806;font-weight:600">C</td><td>50〜64点</td><td>要改善事項あり。統合後の物流再設計コストを買収価格に反映すること。</td><td>再設計コストを価格交渉に反映</td></tr>
+    <tr><td style="color:#791F1F;font-weight:600">D</td><td>50点未満</td><td>重大なリスクを複数確認。詳細調査なしでの統合は非推奨。</td><td>詳細調査実施または見送りを検討</td></tr>
+  </table>
+  <h2>どう活用するか</h2>
+  <div class="use-grid">
+    <div class="use-card"><div class="use-card-label">取締役会への報告</div><div class="use-card-body">グレードとレーダーチャートを1枚スライドに貼り付けるだけで「物流DD評価」として提出できる。</div></div>
+    <div class="use-card"><div class="use-card-label">弱点の特定</div><div class="use-card-body">レーダーチャートで業界標準（70点ライン）を下回っている軸が改善・交渉ポイント。</div></div>
+    <div class="use-card"><div class="use-card-label">比較評価</div><div class="use-card-body">複数の買収候補を同じコードで評価し、グレードと5軸を横並びで比較することで相対評価が可能。</div></div>
+  </div>
+</div>
+
+<hr class="sep">
+
+<!-- Panel M -->
+<div class="panel-section" id="pm">
+  <div class="panel-header">
+    <div class="panel-id pid-sum">M</div>
+    <div>
+      <div class="panel-name">M&A物流DDサマリ ダッシュボード<span class="panel-tag tag-sum">統合サマリ</span></div>
+      <div style="font-size:11px;color:#666;margin-top:2px">make_subplots 3行×5列（Indicator + Bar + Waterfall + Table）　高さ700px</div>
+    </div>
+  </div>
+  <h2>何が表示されるか</h2>
+  <p>Panel I〜Lの結果を1画面に集約した最終サマリです。3段構成で全情報を網羅します。</p>
+  <table>
+    <tr><th>行</th><th>内容</th></tr>
+    <tr><td>Row 1（上段）</td><td>KPIインジケーター5個：総合グレード・シナジー推定総額・代替不可拠点数・高戦略価値拠点数・最近傍距離中央値</td></tr>
+    <tr><td>Row 2（中段左）</td><td>5軸スコア横棒グラフ（70点参考線付き）：緑●≥70点 / 橙△≥50点 / 赤×＜50点</td></tr>
+    <tr><td>Row 2（中段右）</td><td>シナジー内訳ウォーターフォールチャート：現状→ルート最適化→配分改善→統合後コスト</td></tr>
+    <tr><td>Row 3（下段）</td><td>DD判定コメント（全幅）：グレード・スコア・判定コメント・閾値・高価値拠点数</td></tr>
+  </table>
+  <h3>パネル背景色のグレード連動</h3>
+  <ul>
+    <li>グレードA: 緑系背景（#EAF3DE）</li>
+    <li>グレードB: 青系背景（#E6F1FB）</li>
+    <li>グレードC: 橙系背景（#FAEEDA）</li>
+    <li>グレードD: 赤系背景（#FCEBEB）</li>
+  </ul>
+  <p>パネルを開いた瞬間に背景色でグレードが直感的にわかる設計です。</p>
+  <h2>どう活用するか</h2>
+  <div class="use-grid">
+    <div class="use-card"><div class="use-card-label">意思決定の即断</div><div class="use-card-body">背景色とグレードバッジで「買収可否」の結論を5秒で把握。詳細はI〜LパネルでDoDD。</div></div>
+    <div class="use-card"><div class="use-card-label">経営会議スライド</div><div class="use-card-body">Panel Mのスクリーンショット1枚で「M&A物流DD結果」スライドが完成。グレード・スコア・シナジー・判定コメントが全て含まれる。</div></div>
+    <div class="use-card"><div class="use-card-label">テキストログとの照合</div><div class="use-card-body">Panel Mの下に同じ内容のテキストサマリが出力されるため、ログとの整合性確認や数値の転記が容易。</div></div>
+  </div>
+  <div class="tip">Panel Mのタイトルに実行日時とn_nodesが自動表示されます。「いつ・何拠点で評価したか」が記録として残るため、過去の評価との比較に役立ちます。</div>
+</div>
+
+<hr class="sep">
+
+<!-- FAQ -->
+<h1 id="faq">共通FAQ・注意事項</h1>
+
+<div class="qa">
+  <div class="qa-q">各パネルはどの順番で表示されるか</div>
+  <div class="qa-a">Panel A → B → C/D/E → F/G/H（CLO運用）→ Panel I → J → K → L（M&A DD）→ Panel M（サマリ）の順に自動表示されます。全13パネルが順次 Colab セル出力に表示されます。</div>
+</div>
+<div class="qa">
+  <div class="qa-q">パネルの数値が毎回少し変わるのはなぜか</div>
+  <div class="qa-a">PHASE 2の衛星リスク予測が量子乱数ベースのため、実行のたびにrisk_scoreが変わります。配分適正度・量子最適化・戦略価値スコアなど、risk_scoreを使う指標は実行ごとに微変動します。SA-QUBOはseed=42固定のため、risk_scoreが同じなら結果は再現されます。</div>
+</div>
+<div class="qa">
+  <div class="qa-q">シナジー試算の数値をそのままM&A交渉に使えるか</div>
+  <div class="qa-a">直接は使えません。コスト単価¥120/kmは仮定値であり、実際の輸送コスト（燃料費・人件費・固定費）を加味した自社実績単価に差し替えた上で、複数シナリオの感度分析を行ってから交渉資料にご使用ください。</div>
+</div>
+<div class="qa">
+  <div class="qa-q">グレードDが出た場合はどうすればよいか</div>
+  <div class="qa-a">Panel Lのスコアカードで50点未満の軸（×）を特定し、その原因を分析してください。強靭性が低い場合は代替不可拠点の現地調査、物流効率性が低い場合はルート設計の見直し、リスク分散性が低い場合はリスク集中エリアの詳細評価が必要です。それらのコストを買収価格に反映した上で、改めて意思決定してください。</div>
+</div>
+<div class="qa">
+  <div class="qa-q">複数の買収候補を比較するにはどうすればよいか</div>
+  <div class="qa-a">候補ごとにCSVデータを差し替えてプログラムを実行し、それぞれのPanel Mのグレード・5軸スコア・シナジー試算を記録します。同じ算出方法・同じ前提条件での評価なので、候補間の相対比較が可能です。</div>
+</div>
+
+<footer>NEDO-4 IBM 量子自動分割 確定版 v1.7-100　|　CLO 統合ダッシュボード 全パネル 経営者向け利用ガイド　|　社外秘　|　2026年6月</footer>
+</div>
+</body>
+</html>

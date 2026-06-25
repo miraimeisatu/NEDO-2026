@@ -1,0 +1,6 @@
+number,source_name,lat,lon,risk_score
+1,Shinjuku_Staion,35.6896,139.7006,0
+2,Taito Ward,35.7125736,139.7802043,20
+3,Shinagawa Ward,35.6091973,139.7303364,39
+4,Setagaya Ward,35.6465615,139.6532924,90
+5,Suginami Ward,35.6994705,139.6355204,56

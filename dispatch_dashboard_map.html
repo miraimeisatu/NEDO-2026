@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NEDO-4 配車最適化ダッシュボード</title>
+<script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+<style>
+:root{
+  --bg:#0b0f1a;--bg2:#111827;--bg3:#1a2236;--bdr:#1e2d47;
+  --g:#00c9a7;--b:#3b82f6;--a:#f59e0b;--r:#ef4444;--p:#a855f7;
+  --tx:#e2e8f0;--mu:#7a8fa6;
+  --mono:'JetBrains Mono','Consolas',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:'Inter','Helvetica Neue',sans-serif;line-height:1.5}
+
+/* ── Header ── */
+.hdr{
+  background:linear-gradient(135deg,#0b0f1a 0%,#0f2040 60%,#0b1a2f 100%);
+  border-bottom:1px solid var(--bdr);padding:26px 40px 22px;
+  display:flex;align-items:flex-end;justify-content:space-between;
+  position:relative;overflow:hidden;
+}
+.hdr::before{content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 120% at 70% -20%,rgba(0,201,167,.08) 0%,transparent 70%);
+  pointer-events:none;}
+.eyebrow{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--g);font-family:var(--mono);margin-bottom:6px}
+h1{font-size:24px;font-weight:800;letter-spacing:-.02em;color:#fff}
+h1 span{color:var(--g)}
+.sub{font-size:12px;color:var(--mu);margin-top:6px}
+.meta{text-align:right;font-family:var(--mono);font-size:11px;color:var(--mu);line-height:1.9;position:relative}
+.live{display:inline-flex;align-items:center;gap:6px;
+  background:rgba(0,201,167,.12);border:1px solid rgba(0,201,167,.3);
+  color:var(--g);padding:4px 12px;border-radius:20px;font-size:11px;margin-bottom:8px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--g);animation:p 2s infinite}
+@keyframes p{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ── Layout ── */
+.main{padding:30px 40px}
+.st{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--mu);
+     font-family:var(--mono);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.st::after{content:'';flex:1;height:1px;background:var(--bdr)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.panel{background:var(--bg2);border:1px solid var(--bdr);border-radius:12px;padding:20px}
+.pt{font-size:12px;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.pd{width:8px;height:8px;border-radius:50%}
+.pdg{background:var(--g)} .pdb{background:var(--b)} .pda{background:var(--a)}
+
+/* ── Map ── */
+.map-wrap{border-radius:12px;overflow:hidden;border:1px solid var(--bdr);margin-bottom:20px}
+
+/* ── KPI ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.kpi{background:var(--bg2);border:1px solid var(--bdr);border-radius:12px;
+      padding:20px 22px 18px;position:relative;overflow:hidden}
+.kpi::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;border-radius:0 0 12px 12px}
+.kpi.cg::after{background:var(--g)} .kpi.cb::after{background:var(--b)}
+.kpi.ca::after{background:var(--a)} .kpi.cp::after{background:var(--p)}
+.kl{font-size:10px;color:var(--mu);letter-spacing:.05em;margin-bottom:8px}
+.kv{font-size:34px;font-weight:800;letter-spacing:-.03em;line-height:1}
+.kpi.cg .kv{color:var(--g)} .kpi.cb .kv{color:var(--b)}
+.kpi.ca .kv{color:var(--a)} .kpi.cp .kv{color:var(--p)}
+.ku{font-size:15px;font-weight:400;margin-left:2px}
+.ks{font-size:10px;color:var(--mu);margin-top:9px;font-family:var(--mono);line-height:1.6}
+.ka{font-size:10px;margin-top:7px;color:var(--mu)}
+.ka .old{text-decoration:line-through;opacity:.5} .ka .nw{color:var(--g);font-weight:700}
+
+/* ── BA bars ── */
+.ba-item{margin-bottom:11px}
+.ba-head{font-size:10px;color:var(--mu);font-family:var(--mono);margin-bottom:4px}
+.ba-row{display:flex;align-items:center;gap:10px;margin-bottom:3px}
+.ba-lbl{font-size:9px;font-family:var(--mono);color:var(--mu);width:54px;text-align:right;flex-shrink:0}
+.ba-wrap{flex:1;height:22px;background:var(--bg3);border-radius:4px;overflow:hidden}
+.ba-bar{height:100%;border-radius:4px;display:flex;align-items:center;padding:0 8px;
+         font-size:10px;font-family:var(--mono);font-weight:600;white-space:nowrap;
+         transition:width 1.2s cubic-bezier(.22,1,.36,1)}
+.bef{background:rgba(239,68,68,.22);color:#ef4444}
+.aft{background:rgba(0,201,167,.22);color:#00c9a7}
+
+/* ── Chart ── */
+.ch{height:200px}
+
+/* ── Table ── */
+.vtbl{width:100%;border-collapse:collapse;font-size:11px}
+.vtbl th{font-size:9px;font-family:var(--mono);letter-spacing:.07em;color:var(--mu);
+          padding:0 10px 10px;border-bottom:1px solid var(--bdr);text-align:left}
+.vtbl td{padding:8px 10px;border-bottom:1px solid rgba(30,45,71,.55);font-family:var(--mono)}
+.vtbl tr:last-child td{border-bottom:none}
+.vtbl tr:hover td{background:rgba(0,201,167,.04)}
+
+/* ── Params ── */
+.pgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.pi{background:var(--bg3);border-radius:8px;padding:11px 13px;display:flex;flex-direction:column;gap:4px}
+.pk{font-size:10px;color:var(--mu)} .pv{font-size:12px;font-family:var(--mono);color:var(--g);font-weight:700}
+
+/* ── Footer ── */
+.ftr{padding:16px 40px;border-top:1px solid var(--bdr);display:flex;
+      justify-content:space-between;font-size:11px;color:var(--mu);font-family:var(--mono)}
+.ftr-r{display:flex;gap:20px}
+::-webkit-scrollbar{width:5px} ::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:3px}
+@media(max-width:860px){
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .two{grid-template-columns:1fr}
+  .pgrid{grid-template-columns:repeat(2,1fr)}
+  .main,.hdr{padding:18px}
+}
+</style>
+</head>
+<body>
+
+<!-- ▼ Header -->
+<header class="hdr">
+  <div style="position:relative">
+    <div class="eyebrow">NEDO-4 · Quantum-Optimized Dispatch System</div>
+    <h1>配車最適化<span> ダッシュボード</span></h1>
+    <div class="sub">SA-QUBO + OR-Tools VRP — 労働時間・走行距離・遅延削減の可視化</div>
+  </div>
+  <div class="meta">
+    <div class="live"><span class="dot"></span>実行結果 確定</div>
+    <div>n_nodes=100 | n_vehicles=25 | clusters=9 | N_sub=12</div>
+    <div>走行距離 <strong style="color:var(--g)">+65.2%</strong> &nbsp;|&nbsp;
+         労働時間 <strong style="color:var(--b)">+70.4%</strong> &nbsp;|&nbsp;
+         燃料 <strong style="color:var(--a)">+65.2%</strong> &nbsp;|&nbsp;
+         演算 <strong style="color:var(--g)">+99.8%</strong></div>
+    <div>実行完了: 2026-06-14 16:21:58</div>
+  </div>
+</header>
+
+<div class="main">
+
+<!-- ▼ Section 1: 統合配車地図 -->
+<div class="st">統合配車地図（全車両ルート — マーカーサイズ ∝ リスクスコア）</div>
+<div class="map-wrap"><div id="map"></div></div>
+
+<!-- ▼ Section 2: KPI カード -->
+<div class="st">主要削減指標</div>
+<div class="kpi-grid">
+  <div class="kpi cg">
+    <div class="kl">走行距離削減率</div>
+    <div class="kv">65.2<span class="ku">%</span></div>
+    <div class="ks">最適: 988.3 km<br>基準: 2,838.1 km</div>
+    <div class="ka"><span class="old">2,838km</span> → <span class="nw">988km</span></div>
+  </div>
+  <div class="kpi cb">
+    <div class="kl">労働時間削減率（1人/日）</div>
+    <div class="kv">70.4<span class="ku">%</span></div>
+    <div class="ks">運行 1.58h + 積下 1.65h<br>基準: 10.9h → 3.2h</div>
+    <div class="ka"><span class="old">10.9h</span> → <span class="nw">3.2h</span></div>
+  </div>
+  <div class="kpi ca">
+    <div class="kl">燃料削減率</div>
+    <div class="kv">65.2<span class="ku">%</span></div>
+    <div class="ks">基準: 283.8L → 最適: 98.8L<br>燃費 10L/100km 想定</div>
+    <div class="ka"><span class="old">283.8L</span> → <span class="nw">98.8L</span></div>
+  </div>
+  <div class="kpi cp">
+    <div class="kl">演算時間削減率（QAOA→SA-QUBO）</div>
+    <div class="kv">99.8<span class="ku">%</span></div>
+    <div class="ks">旧QAOA: 2420s → SA-QUBO: 4.57s</div>
+    <div class="ka"><span class="old">2420s</span> → <span class="nw">4.57s</span></div>
+  </div>
+</div>
+
+<!-- ▼ Section 3+4: Before/After + フェーズ時間 -->
+<div class="two">
+  <div class="panel">
+    <div class="pt"><span class="pd pdg"></span>最適化前 vs 後：運行指標比較</div>
+    
+    <div class="ba-item">
+      <div class="ba-head">走行距離</div>
+      <div class="ba-row">
+        <div class="ba-lbl">最適化前</div>
+        <div class="ba-wrap"><div class="ba-bar bef" style="width:100%">2838.1 km</div></div>
+      </div>
+      <div class="ba-row">
+        <div class="ba-lbl">最適化後</div>
+        <div class="ba-wrap"><div class="ba-bar aft" style="width:34.8%">988.3 km</div></div>
+      </div>
+    </div>
+    <div class="ba-item">
+      <div class="ba-head">1人拘束時間</div>
+      <div class="ba-row">
+        <div class="ba-lbl">最適化前</div>
+        <div class="ba-wrap"><div class="ba-bar bef" style="width:100%">10.9 h</div></div>
+      </div>
+      <div class="ba-row">
+        <div class="ba-lbl">最適化後</div>
+        <div class="ba-wrap"><div class="ba-bar aft" style="width:29.6%">3.2 h</div></div>
+      </div>
+    </div>
+    <div class="ba-item">
+      <div class="ba-head">燃料消費</div>
+      <div class="ba-row">
+        <div class="ba-lbl">最適化前</div>
+        <div class="ba-wrap"><div class="ba-bar bef" style="width:100%">283.8 L</div></div>
+      </div>
+      <div class="ba-row">
+        <div class="ba-lbl">最適化後</div>
+        <div class="ba-wrap"><div class="ba-bar aft" style="width:34.8%">98.8 L</div></div>
+      </div>
+    </div>
+    <div class="ba-item">
+      <div class="ba-head">QAOA演算時間</div>
+      <div class="ba-row">
+        <div class="ba-lbl">最適化前</div>
+        <div class="ba-wrap"><div class="ba-bar bef" style="width:100%">2420.0 s</div></div>
+      </div>
+      <div class="ba-row">
+        <div class="ba-lbl">最適化後</div>
+        <div class="ba-wrap"><div class="ba-bar aft" style="width:0.2%">4.6 s</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="pt"><span class="pd pdb"></span>フェーズ別処理時間内訳</div>
+    <div class="ch" id="ph"></div>
+    <div style="margin-top:12px;font-size:11px;color:var(--mu);font-family:var(--mono)">
+      合計実行時間: <strong style="color:var(--g)">42.4s</strong>
+    </div>
+  </div>
+</div>
+
+<!-- ▼ Section 5: 車両負荷バランス -->
+<div class="st">車両負荷バランス（走行距離の均等性）</div>
+<div class="panel" style="margin-bottom:20px">
+  <div class="pt">
+    <span class="pd pda"></span>車両別担当距離
+    <span style="font-size:10px;color:var(--mu);font-family:var(--mono)">
+      CV_dist=0.7894 &nbsp;|&nbsp; CV_nodes=0.4787
+      &nbsp;|&nbsp; スイートスポットスコア=2,615,093
+      &nbsp;|&nbsp; <span style="color:var(--a)">偏りあり △</span>
+    </span>
+  </div>
+  <div style="height:220px" id="bal"></div>
+</div>
+
+<!-- ▼ Section 6: 車両別明細テーブル -->
+<div class="st">車両別明細（全 25 台）</div>
+<div class="panel" style="margin-bottom:20px;overflow-x:auto">
+  <table class="vtbl">
+    <thead><tr>
+      <th>車両</th><th>担当拠点数</th><th>走行距離 (m)</th>
+      <th>運行時間 (h)</th><th>積み下ろし (h)</th>
+      <th>総拘束時間 (h)</th><th>負荷判定</th>
+    </tr></thead>
+    <tbody><tr><td style="color:#60a5fa">車両 1</td><td>7</td><td>43,916</td><td>1.76</td><td>2.92</td><td style="color:#00c9a7">4.67</td><td><span style="background:rgba(0,201,167,.18);color:#00c9a7;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700">均等</span></td></tr><tr><td style="color:#60a5fa">車両 2</td><td>2</td><td>16,952</td><td>0.68</td><td>0.83</td><td style="color:#00c9a7">1.51</td><td><span style="background:rgba(0,201,167,.18);color:#00c9a7;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700">均等</span></td></tr><tr><td style="color:#60a5fa">車両 3</td><td>5</td><td>63,540</td><td>2.54</td><td>2.08</td><td style="color:#00c9a7">4.62</td><td><span style="background:rgba(0,201,167,.18);color:#00c9a7;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700">均等</span></td></tr><tr><td style="color:#60a5fa">車両 4</td><td>7</td><td>130,456</td><td>5.22</td><td>2.92</td><td style="color:#ef4444">8.13</td><td><span style="background:rgba(239,68,68,.18);color:#ef4444;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700">負荷過多</span></td></tr><tr><td style="color:#60a5fa">車両 5</td><td>3</td><td>26,146</td><td>1.05</td><td>1.25</td><td style="color:#00c9a7">2.30</td><td><span style="background:rgba(0,201,167,.18);color:#00c9a7;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700">均等</span></td></tr><tr><td style="color:#60a5fa">車両 6</td><td>1</td><td>0</td><td>0.00</td><td>0.42</td><td style="color:#00c9a7">0.42</td><td><span style="background:rgba(59,130,246,.18);color:#60a5fa;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700">負荷軽</span></td></tr><tr><td style="color:#60a5fa">車両 7</td><td>4</td><td>36,436</td><td>1.46</td><td>1.67</td><td style="color:#00c9a7">3.12</td><td><span style="background:rgba(0,201,167,.18);color:#00c9a7;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700">均等</span></td></tr><tr><td style="color:#60a5fa">車両 8</td><td>4</td><td>42,942</td><td>1.72</td><td>1.67</td><td style="color:#00c9a7">3.38</td><td><span style="background:rgba(0,201,167,.18);color:#00c9a7;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700">均等</span></td></tr><tr><td style="color:#60a5fa">車両 9</td><td>6</td><td>53,062</td><td>2.12</td><td>2.50</td><td style="color:#00c9a7">4.62</td><td><span style="background:rgba(0,201,167,.18);color:#00c9a7;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700">均等</span></td></tr><tr><td style="color:#60a5fa">車両 10</td><td>7</td><td>61,873</td><td>2.47</td><td>2.92</td><td style="color:#00c9a7">5.39</td><td><span style="background:rgba(0,201,167,.18);color:#00c9a7;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700">均等</span></td></tr><tr><td style="color:#60a5fa">車両 11</td><td>6</td><td>92,125</td><td>3.69</td><td>2.50</td><td style="color:#00c9a7">6.19</td><td><span style="background:rgba(239,68,68,.18);color:#ef4444;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700">負荷過多</span></td></tr><tr><td style="color:#60a5fa">車両 12</td><td>4</td><td>74,360</td><td>2.97</td><td>1.67</td><td style="color:#00c9a7">4.64</td><td><span style="background:rgba(239,68,68,.18);color:#ef4444;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700">負荷過多</span></td></tr><tr><td style="color:#60a5fa">車両 13</td><td>4</td><td>29,218</td><td>1.17</td><td>1.67</td><td style="color:#00c9a7">2.84</td><td><span style="background:rgba(0,201,167,.18);color:#00c9a7;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700">均等</span></td></tr><tr><td style="color:#60a5fa">車両 14</td><td>2</td><td>16,272</td><td>0.65</td><td>0.83</td><td style="color:#00c9a7">1.48</td><td><span style="background:rgba(0,201,167,.18);color:#00c9a7;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700">均等</span></td></tr><tr><td style="color:#60a5fa">車両 15</td><td>7</td><td>87,861</td><td>3.51</td><td>2.92</td><td style="color:#00c9a7">6.43</td><td><span style="background:rgba(239,68,68,.18);color:#ef4444;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700">負荷過多</span></td></tr><tr><td style="color:#60a5fa">車両 16</td><td>2</td><td>14,575</td><td>0.58</td><td>0.83</td><td style="color:#00c9a7">1.42</td><td><span style="background:rgba(0,201,167,.18);color:#00c9a7;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700">均等</span></td></tr><tr><td style="color:#60a5fa">車両 17</td><td>4</td><td>17,313</td><td>0.69</td><td>1.67</td><td style="color:#00c9a7">2.36</td><td><span style="background:rgba(0,201,167,.18);color:#00c9a7;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700">均等</span></td></tr><tr><td style="color:#60a5fa">車両 18</td><td>3</td><td>24,178</td><td>0.97</td><td>1.25</td><td style="color:#00c9a7">2.22</td><td><span style="background:rgba(0,201,167,.18);color:#00c9a7;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700">均等</span></td></tr><tr><td style="color:#60a5fa">車両 19</td><td>3</td><td>27,990</td><td>1.12</td><td>1.25</td><td style="color:#00c9a7">2.37</td><td><span style="background:rgba(0,201,167,.18);color:#00c9a7;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700">均等</span></td></tr><tr><td style="color:#60a5fa">車両 20</td><td>5</td><td>38,288</td><td>1.53</td><td>2.08</td><td style="color:#00c9a7">3.61</td><td><span style="background:rgba(0,201,167,.18);color:#00c9a7;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700">均等</span></td></tr><tr><td style="color:#60a5fa">車両 21</td><td>5</td><td>32,971</td><td>1.32</td><td>2.08</td><td style="color:#00c9a7">3.40</td><td><span style="background:rgba(0,201,167,.18);color:#00c9a7;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700">均等</span></td></tr><tr><td style="color:#60a5fa">車両 22</td><td>2</td><td>21,084</td><td>0.84</td><td>0.83</td><td style="color:#00c9a7">1.68</td><td><span style="background:rgba(0,201,167,.18);color:#00c9a7;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700">均等</span></td></tr><tr><td style="color:#60a5fa">車両 23</td><td>4</td><td>29,886</td><td>1.20</td><td>1.67</td><td style="color:#00c9a7">2.86</td><td><span style="background:rgba(0,201,167,.18);color:#00c9a7;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700">均等</span></td></tr><tr><td style="color:#60a5fa">車両 24</td><td>2</td><td>6,859</td><td>0.27</td><td>0.83</td><td style="color:#00c9a7">1.11</td><td><span style="background:rgba(59,130,246,.18);color:#60a5fa;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700">負荷軽</span></td></tr><tr><td style="color:#60a5fa">車両 25</td><td>1</td><td>0</td><td>0.00</td><td>0.42</td><td style="color:#00c9a7">0.42</td><td><span style="background:rgba(59,130,246,.18);color:#60a5fa;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700">負荷軽</span></td></tr></tbody>
+  </table>
+</div>
+
+<!-- ▼ Section 7: パラメータ -->
+<div class="st">最適化パラメータ</div>
+<div class="panel"><div class="pgrid"><div class="pi"><span class="pk">n_nodes</span><span class="pv">100</span></div><div class="pi"><span class="pk">n_vehicles</span><span class="pv">25</span></div><div class="pi"><span class="pk">n_clusters</span><span class="pv">9</span></div><div class="pi"><span class="pk">N_sub</span><span class="pv">12</span></div><div class="pi"><span class="pk">SA_STEPS</span><span class="pv">3,000</span></div><div class="pi"><span class="pk">VRP 戦略</span><span class="pv">SAVINGS+TABU</span></div><div class="pi"><span class="pk">VRP 制限</span><span class="pv">300s/cl</span></div><div class="pi"><span class="pk">平均速度</span><span class="pv">25 km/h</span></div><div class="pi"><span class="pk">積み下ろし</span><span class="pv">25 分/件</span></div><div class="pi"><span class="pk">燃費</span><span class="pv">10 L/100km</span></div></div></div>
+
+</div><!-- /main -->
+
+<footer class="ftr">
+  <div>NEDO-4 · SA-QUBO + OR-Tools VRP · 2026-06-14 16:21:58</div>
+  <div class="ftr-r">
+    <span>SA_STEPS=3,000</span><span>N_SUB=12</span>
+    <span>25 km/h</span><span>25 min/件</span><span>10 L/100km</span>
+  </div>
+</footer>
+
+<script>
+const _common = {responsive:true,displayModeBar:true};
+const _dark   = {paper_bgcolor:'#111827',plot_bgcolor:'#1a2236',font:{color:'#e2e8f0'}};
+const _ax     = {color:'#7a8fa6',gridcolor:'#1e2d47'};
+
+// Section 1: 統合配車地図
+Plotly.newPlot('map',
+  [{"type": "scattermapbox", "lat": [35.6896], "lon": [139.7006], "mode": "markers+text", "text": ["★ デポ"], "textposition": "top right", "marker": {"size": 22, "color": "#ffffff"}, "name": "★ デポ", "hovertemplate": "<b>★ デポ</b><br>Shinjuku_Staion<extra></extra>"}, {"type": "scattermapbox", "lat": [35.908649, 35.8793521, 35.8283861, 35.836195, 35.8175849, 35.880964, 35.8638181], "lon": [139.6248081, 139.5196171, 139.5264752, 139.5800582, 139.6777785, 139.6809281, 139.6044141], "mode": "markers+lines", "hovertemplate": ["<b>車両 1</b><br>拠点: Omiya WardSaitama <br>到着順: 0<br>risk_score: 11<br>累積距離: 0 m<br>P2インセンティブ: ¥14<extra></extra>", "<b>車両 1</b><br>拠点: Fujimino <br>到着順: 1<br>risk_score: 11<br>累積距離: 10,038 m<br>P2インセンティブ: ¥12<extra></extra>", "<b>車両 1</b><br>拠点: Miyoshi Town<br>到着順: 2<br>risk_score: 4<br>累積距離: 15,726 m<br>P2インセンティブ: ¥13<extra></extra>", "<b>車両 1</b><br>拠点: Shiki <br>到着順: 3<br>risk_score: 7<br>累積距離: 20,644 m<br>P2インセンティブ: ¥11<extra></extra>", "<b>車両 1</b><br>拠点: Toda <br>到着順: 4<br>risk_score: 14<br>累積距離: 29,712 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 1</b><br>拠点: Midori WardSaitama <br>到着順: 5<br>risk_score: 12<br>累積距離: 36,750 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 1</b><br>拠点: Sakura WardSaitama <br>到着順: 6<br>risk_score: 10<br>累積距離: 43,916 m<br>P2インセンティブ: ¥6<extra></extra>"], "marker": {"size": [8, 8, 8, 8, 8, 8, 8], "color": "#00c9a7", "opacity": 0.9}, "line": {"color": "#00c9a7", "width": 2}, "name": "車両 1"}, {"type": "scattermapbox", "lat": [36.3966506, 36.4794764], "lon": [140.5347934, 140.375928], "mode": "markers+lines", "hovertemplate": ["<b>車両 2</b><br>拠点: Hitachinaka City<br>到着順: 0<br>risk_score: 16<br>累積距離: 0 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 2</b><br>拠点: Shirosato Town<br>到着順: 1<br>risk_score: 2<br>累積距離: 16,952 m<br>P2インセンティブ: ¥17<extra></extra>"], "marker": {"size": [8, 8], "color": "#3b82f6", "opacity": 0.9}, "line": {"color": "#3b82f6", "width": 2}, "name": "車両 2"}, {"type": "scattermapbox", "lat": [35.6659061, 35.3725402, 35.454338, 35.5348912, 35.5217735], "lon": [140.318025, 140.368552, 140.3744059, 140.4396558, 140.3209903], "mode": "markers+lines", "hovertemplate": ["<b>車両 3</b><br>拠点: Yachimata <br>到着順: 0<br>risk_score: 7<br>累積距離: 0 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 3</b><br>拠点: Ichinomiya Town<br>到着順: 1<br>risk_score: 1<br>累積距離: 32,870 m<br>P2インセンティブ: ¥14<extra></extra>", "<b>車両 3</b><br>拠点: Shirako Town<br>到着順: 2<br>risk_score: 1<br>累積距離: 41,960 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 3</b><br>拠点: Kujukuri Town<br>到着順: 3<br>risk_score: 2<br>累積距離: 52,680 m<br>P2インセンティブ: ¥13<extra></extra>", "<b>車両 3</b><br>拠点: Oamishirasato <br>到着順: 4<br>risk_score: 5<br>累積距離: 63,540 m<br>P2インセンティブ: ¥18<extra></extra>"], "marker": {"size": [8, 8, 8, 8, 8], "color": "#f59e0b", "opacity": 0.9}, "line": {"color": "#f59e0b", "width": 2}, "name": "車両 3"}, {"type": "scattermapbox", "lat": [35.3747429, 35.1584376, 35.4823577, 35.3606484, 35.3307448, 35.3206301, 35.4031334], "lon": [139.2199154, 139.1371349, 139.2763651, 139.0838347, 139.2185817, 139.0997508, 139.3145107], "mode": "markers+lines", "hovertemplate": ["<b>車両 4</b><br>拠点: Nakai Town<br>到着順: 0<br>risk_score: 17<br>累積距離: 0 m<br>P2インセンティブ: ¥13<extra></extra>", "<b>車両 4</b><br>拠点: Imaizuru<br>到着順: 1<br>risk_score: 1<br>累積距離: 25,152 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 4</b><br>拠点: Kiyokawa Village<br>到着順: 2<br>risk_score: 1<br>累積距離: 63,254 m<br>P2インセンティブ: ¥18<extra></extra>", "<b>車両 4</b><br>拠点: Kaamakita<br>到着順: 3<br>risk_score: 1<br>累積距離: 85,346 m<br>P2インセンティブ: ¥13<extra></extra>", "<b>車両 4</b><br>拠点: Sakai<br>到着順: 4<br>risk_score: 1<br>累積距離: 98,036 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 4</b><br>拠点: Manazuru Town<br>到着順: 5<br>risk_score: 4<br>累積距離: 108,898 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 4</b><br>拠点: Yamakita Town<br>到着順: 6<br>risk_score: 10<br>累積距離: 130,456 m<br>P2インセンティブ: ¥12<extra></extra>"], "marker": {"size": [8, 8, 8, 8, 8, 8, 8], "color": "#ef4444", "opacity": 0.9}, "line": {"color": "#ef4444", "width": 2}, "name": "車両 4"}, {"type": "scattermapbox", "lat": [35.9114223, 35.9515333, 35.8577836], "lon": [140.0503534, 139.975572, 140.1391657], "mode": "markers+lines", "hovertemplate": ["<b>車両 5</b><br>拠点: Toride City<br>到着順: 0<br>risk_score: 11<br>累積距離: 0 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 5</b><br>拠点: Moriya City<br>到着順: 1<br>risk_score: 6<br>累積距離: 8,083 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 5</b><br>拠点: Tone Town<br>到着順: 2<br>risk_score: 2<br>累積距離: 26,146 m<br>P2インセンティブ: ¥13<extra></extra>"], "marker": {"size": [8, 8, 8], "color": "#a855f7", "opacity": 0.9}, "line": {"color": "#a855f7", "width": 2}, "name": "車両 5"}, {"type": "scattermapbox", "lat": [36.7198987], "lon": [139.6982361], "mode": "markers+lines", "hovertemplate": ["<b>車両 6</b><br>拠点: Nikko City<br>到着順: 0<br>risk_score: 8<br>累積距離: 0 m<br>P2インセンティブ: ¥17<extra></extra>"], "marker": {"size": [8], "color": "#06b6d4", "opacity": 0.9}, "line": {"color": "#06b6d4", "width": 2}, "name": "車両 6"}, {"type": "scattermapbox", "lat": [35.9916443, 36.1771581, 36.1184155, 36.1147677], "lon": [139.0855869, 139.1815144, 139.1929538, 139.1096114], "mode": "markers+lines", "hovertemplate": ["<b>車両 7</b><br>拠点: Chichibu <br>到着順: 0<br>risk_score: 6<br>累積距離: 0 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 7</b><br>拠点: Misato Town<br>到着順: 1<br>risk_score: 1<br>累積距離: 22,324 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 7</b><br>拠点: Yorii Town<br>到着順: 2<br>risk_score: 3<br>累積距離: 28,922 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 7</b><br>拠点: Nagatoro Town<br>到着順: 3<br>risk_score: 1<br>累積距離: 36,436 m<br>P2インセンティブ: ¥6<extra></extra>"], "marker": {"size": [8, 8, 8, 8], "color": "#84cc16", "opacity": 0.9}, "line": {"color": "#84cc16", "width": 2}, "name": "車両 7"}, {"type": "scattermapbox", "lat": [35.4956281, 35.3908304, 35.5222897, 35.4322553], "lon": [139.6809281, 139.6146102, 139.730788, 139.6605146], "mode": "markers+lines", "hovertemplate": ["<b>車両 8</b><br>拠点: Midori WardYokohama <br>到着順: 0<br>risk_score: 29<br>累積距離: 0 m<br>P2インセンティブ: ¥14<extra></extra>", "<b>車両 8</b><br>拠点: Kawasaki WardKawasaki <br>到着順: 1<br>risk_score: 17<br>累積距離: 13,093 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 8</b><br>拠点: Kamakura <br>到着順: 2<br>risk_score: 22<br>累積距離: 31,091 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 8</b><br>拠点: Izumi WardYokohama <br>到着順: 3<br>risk_score: 15<br>累積距離: 42,942 m<br>P2インセンティブ: ¥16<extra></extra>"], "marker": {"size": [8, 8, 8, 8], "color": "#f97316", "opacity": 0.9}, "line": {"color": "#f97316", "width": 2}, "name": "車両 8"}, {"type": "scattermapbox", "lat": [35.6833484, 35.63711, 35.5936667, 35.7860547, 35.754598, 35.6994563], "lon": [139.5598366, 139.4465075, 139.5025502, 139.5261729, 139.4685613, 139.5030584], "mode": "markers+lines", "hovertemplate": ["<b>車両 9</b><br>拠点: Mitaka City<br>到着順: 0<br>risk_score: 19<br>累積距離: 0 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 9</b><br>拠点: Tama City<br>到着順: 1<br>risk_score: 15<br>累積距離: 11,472 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 9</b><br>拠点: Hadano <br>到着順: 2<br>risk_score: 18<br>累積距離: 18,472 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 9</b><br>拠点: Kiyose City<br>到着順: 3<br>risk_score: 7<br>累積距離: 39,924 m<br>P2インセンティブ: ¥14<extra></extra>", "<b>車両 9</b><br>拠点: Higashimurayama City<br>到着順: 4<br>risk_score: 15<br>累積距離: 46,194 m<br>P2インセンティブ: ¥11<extra></extra>", "<b>車両 9</b><br>拠点: Koganei City<br>到着順: 5<br>risk_score: 12<br>累積距離: 53,062 m<br>P2インセンティブ: ¥14<extra></extra>"], "marker": {"size": [8, 8, 8, 8, 8, 8], "color": "#ec4899", "opacity": 0.9}, "line": {"color": "#ec4899", "width": 2}, "name": "車両 9"}, {"type": "scattermapbox", "lat": [35.7125736, 35.7876663, 35.6531598, 35.8226792, 35.8254078, 35.775017, 35.7359339], "lon": [139.7802043, 139.9033248, 139.9019863, 139.8392388, 139.805378, 139.8044129, 139.7834758], "mode": "markers+lines", "hovertemplate": ["<b>車両 10</b><br>拠点: Taito Ward<br>到着順: 0<br>risk_score: 20<br>累積距離: 0 m<br>P2インセンティブ: ¥11<extra></extra>", "<b>車両 10</b><br>拠点: Matsudo <br>到着順: 1<br>risk_score: 48<br>累積距離: 13,907 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 10</b><br>拠点: Urayasu <br>到着順: 2<br>risk_score: 16<br>累積距離: 28,831 m<br>P2インセンティブ: ¥14<extra></extra>", "<b>車両 10</b><br>拠点: Yashio <br>到着順: 3<br>risk_score: 9<br>累積距離: 48,477 m<br>P2インセンティブ: ¥14<extra></extra>", "<b>車両 10</b><br>拠点: Soka <br>到着順: 4<br>risk_score: 25<br>累積距離: 51,551 m<br>P2インセンティブ: ¥12<extra></extra>", "<b>車両 10</b><br>拠点: Adachi Ward<br>到着順: 5<br>risk_score: 67<br>累積距離: 57,142 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 10</b><br>拠点: Arakawa Ward<br>到着順: 6<br>risk_score: 21<br>累積距離: 61,873 m<br>P2インセンティブ: ¥6<extra></extra>"], "marker": {"size": [8, 12.0, 8, 8, 8, 16.75, 8], "color": "#14b8a6", "opacity": 0.9}, "line": {"color": "#14b8a6", "width": 2}, "name": "車両 10"}, {"type": "scattermapbox", "lat": [35.7766588, 35.9906251, 36.0046011, 35.9015075, 35.8977688, 35.7267856], "lon": [140.3187418, 140.4889866, 140.3019858, 140.4051442, 140.4993404, 140.3430617], "mode": "markers+lines", "hovertemplate": ["<b>車両 11</b><br>拠点: Narita <br>到着順: 0<br>risk_score: 13<br>累積距離: 0 m<br>P2インセンティブ: ¥14<extra></extra>", "<b>車両 11</b><br>拠点: Namegata City<br>到着順: 1<br>risk_score: 3<br>累積距離: 28,283 m<br>P2インセンティブ: ¥13<extra></extra>", "<b>車両 11</b><br>拠点: Miho Village<br>到着順: 2<br>risk_score: 2<br>累積距離: 45,215 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 11</b><br>拠点: Kanzaki Town<br>到着順: 3<br>risk_score: 1<br>累積距離: 59,961 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 11</b><br>拠点: Katori <br>到着順: 4<br>risk_score: 8<br>累積距離: 68,474 m<br>P2インセンティブ: ¥14<extra></extra>", "<b>車両 11</b><br>拠点: Tomisato <br>到着順: 5<br>risk_score: 5<br>累積距離: 92,125 m<br>P2インセンティブ: ¥18<extra></extra>"], "marker": {"size": [8, 8, 8, 8, 8, 8], "color": "#6366f1", "opacity": 0.9}, "line": {"color": "#6366f1", "width": 2}, "name": "車両 11"}, {"type": "scattermapbox", "lat": [36.3052343, 36.4393763, 36.5432265, 36.3823772], "lon": [139.9794265, 139.9099658, 140.102137, 139.7341396], "mode": "markers+lines", "hovertemplate": ["<b>車両 12</b><br>拠点: Chikusei City<br>到着順: 0<br>risk_score: 10<br>累積距離: 0 m<br>P2インセンティブ: ¥12<extra></extra>", "<b>車両 12</b><br>拠点: Kaminokawa Town<br>到着順: 1<br>risk_score: 3<br>累積距離: 16,137 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 12</b><br>拠点: Ichikai Town<br>到着順: 2<br>risk_score: 1<br>累積距離: 36,856 m<br>P2インセンティブ: ¥15<extra></extra>", "<b>車両 12</b><br>拠点: Tochigi City<br>到着順: 3<br>risk_score: 16<br>累積距離: 74,360 m<br>P2インセンティブ: ¥13<extra></extra>"], "marker": {"size": [8, 8, 8, 8], "color": "#eab308", "opacity": 0.9}, "line": {"color": "#eab308", "width": 2}, "name": "車両 12"}, {"type": "scattermapbox", "lat": [36.1313882, 36.0057661, 35.9924665, 36.0659102], "lon": [139.6017706, 139.5425834, 139.4842887, 139.5221704], "mode": "markers+lines", "hovertemplate": ["<b>車両 13</b><br>拠点: Kazo <br>到着順: 0<br>risk_score: 11<br>累積距離: 0 m<br>P2インセンティブ: ¥11<extra></extra>", "<b>車両 13</b><br>拠点: Okegawa <br>到着順: 1<br>risk_score: 7<br>累積距離: 14,924 m<br>P2インセンティブ: ¥14<extra></extra>", "<b>車両 13</b><br>拠点: Kawajima Town<br>到着順: 2<br>risk_score: 2<br>累積距離: 20,383 m<br>P2インセンティブ: ¥13<extra></extra>", "<b>車両 13</b><br>拠点: Konosu <br>到着順: 3<br>risk_score: 12<br>累積距離: 29,218 m<br>P2インセンティブ: ¥13<extra></extra>"], "marker": {"size": [8, 8, 8, 8], "color": "#10b981", "opacity": 0.9}, "line": {"color": "#10b981", "width": 2}, "name": "車両 13"}, {"type": "scattermapbox", "lat": [35.1522272, 35.2851872], "lon": [140.3208833, 140.2454217], "mode": "markers+lines", "hovertemplate": ["<b>車両 14</b><br>拠点: Katsuura <br>到着順: 0<br>risk_score: 2<br>累積距離: 0 m<br>P2インセンティブ: ¥18<extra></extra>", "<b>車両 14</b><br>拠点: Otaki Town<br>到着順: 1<br>risk_score: 1<br>累積距離: 16,272 m<br>P2インセンティブ: ¥6<extra></extra>"], "marker": {"size": [8, 8], "color": "#0ea5e9", "opacity": 0.9}, "line": {"color": "#0ea5e9", "width": 2}, "name": "車両 14"}, {"type": "scattermapbox", "lat": [35.4014751, 35.3338221, 35.3730006, 35.3192128, 35.5275279, 35.4218189, 35.5193224], "lon": [139.5381824, 139.4036897, 139.3838428, 139.5466731, 139.3957836, 139.4974616, 139.5229088], "mode": "markers+lines", "hovertemplate": ["<b>車両 15</b><br>拠点: Takatsu WardKawasaki <br>到着順: 0<br>risk_score: 28<br>累積距離: 0 m<br>P2インセンティブ: ¥14<extra></extra>", "<b>車両 15</b><br>拠点: Samukawa Town<br>到着順: 1<br>risk_score: 24<br>累積距離: 14,343 m<br>P2インセンティブ: ¥11<extra></extra>", "<b>車両 15</b><br>拠点: Kiyokawa Village<br>到着順: 2<br>risk_score: 5<br>累積距離: 19,049 m<br>P2インセンティブ: ¥18<extra></extra>", "<b>車両 15</b><br>拠点: Minamiashigara <br>到着順: 3<br>risk_score: 17<br>累積距離: 35,008 m<br>P2インセンティブ: ¥13<extra></extra>", "<b>車両 15</b><br>拠点: Isehara <br>到着順: 4<br>risk_score: 28<br>累積距離: 61,877 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 15</b><br>拠点: Minami WardSagamihara <br>到着順: 5<br>risk_score: 15<br>累積距離: 76,800 m<br>P2インセンティブ: ¥15<extra></extra>", "<b>車両 15</b><br>拠点: Asao WardKawasaki <br>到着順: 6<br>risk_score: 18<br>累積距離: 87,861 m<br>P2インセンティブ: ¥6<extra></extra>"], "marker": {"size": [8, 8, 8, 8, 8, 8, 8], "color": "#8b5cf6", "opacity": 0.9}, "line": {"color": "#8b5cf6", "width": 2}, "name": "車両 15"}, {"type": "scattermapbox", "lat": [36.5991273, 36.7191132], "lon": [140.6504712, 140.7167862], "mode": "markers+lines", "hovertemplate": ["<b>車両 16</b><br>拠点: Hitachi City<br>到着順: 0<br>risk_score: 19<br>累積距離: 0 m<br>P2インセンティブ: ¥14<extra></extra>", "<b>車両 16</b><br>拠点: Takahagi City<br>到着順: 1<br>risk_score: 3<br>累積距離: 14,575 m<br>P2インセンティブ: ¥18<extra></extra>"], "marker": {"size": [8, 8], "color": "#fb923c", "opacity": 0.9}, "line": {"color": "#fb923c", "width": 2}, "name": "車両 16"}, {"type": "scattermapbox", "lat": [35.6664381, 35.7384892, 35.7285903, 35.7059102], "lon": [139.3160068, 139.3270235, 139.2934663, 139.3540161], "mode": "markers+lines", "hovertemplate": ["<b>車両 17</b><br>拠点: Hachioji City<br>到着順: 0<br>risk_score: 58<br>累積距離: 0 m<br>P2インセンティブ: ¥14<extra></extra>", "<b>車両 17</b><br>拠点: Fussa City<br>到着順: 1<br>risk_score: 6<br>累積距離: 8,056 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 17</b><br>拠点: Akiruno City<br>到着順: 2<br>risk_score: 8<br>累積距離: 11,284 m<br>P2インセンティブ: ¥15<extra></extra>", "<b>車両 17</b><br>拠点: Akishima City<br>到着順: 3<br>risk_score: 11<br>累積距離: 17,313 m<br>P2インセンティブ: ¥6<extra></extra>"], "marker": {"size": [14.5, 8, 8, 8], "color": "#22c55e", "opacity": 0.9}, "line": {"color": "#22c55e", "width": 2}, "name": "車両 17"}, {"type": "scattermapbox", "lat": [35.9752624, 35.9943676, 35.9256101], "lon": [139.752313, 139.6621755, 139.8152763], "mode": "markers+lines", "hovertemplate": ["<b>車両 18</b><br>拠点: Kasugabe <br>到着順: 0<br>risk_score: 23<br>累積距離: 0 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 18</b><br>拠点: Hasuda <br>到着順: 1<br>risk_score: 6<br>累積距離: 8,400 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 18</b><br>拠点: Matsubushi Town<br>到着順: 2<br>risk_score: 3<br>累積距離: 24,178 m<br>P2インセンティブ: ¥14<extra></extra>"], "marker": {"size": [8, 8, 8], "color": "#e879f9", "opacity": 0.9}, "line": {"color": "#e879f9", "width": 2}, "name": "車両 18"}, {"type": "scattermapbox", "lat": [36.1947889, 36.0942581, 36.239317], "lon": [140.2888599, 140.3307847, 140.3526411], "mode": "markers+lines", "hovertemplate": ["<b>車両 19</b><br>拠点: Ishioka City<br>到着順: 0<br>risk_score: 8<br>累積距離: 0 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 19</b><br>拠点: Kasumigaura City<br>到着順: 1<br>risk_score: 4<br>累積距離: 11,775 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 19</b><br>拠点: Omitama City<br>到着順: 2<br>risk_score: 5<br>累積距離: 27,990 m<br>P2インセンティブ: ¥6<extra></extra>"], "marker": {"size": [8, 8, 8], "color": "#fbbf24", "opacity": 0.9}, "line": {"color": "#fbbf24", "width": 2}, "name": "車両 19"}, {"type": "scattermapbox", "lat": [35.6486955, 35.7224358, 35.7768605, 35.6945485, 35.6349811], "lon": [140.1112339, 140.0998762, 140.0007716, 139.9827277, 140.064982], "mode": "markers+lines", "hovertemplate": ["<b>車両 20</b><br>拠点: Inage WardChiba <br>到着順: 0<br>risk_score: 16<br>累積距離: 0 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 20</b><br>拠点: Yachiyo <br>到着順: 1<br>risk_score: 19<br>累積距離: 8,246 m<br>P2インセンティブ: ¥13<extra></extra>", "<b>車両 20</b><br>拠点: Kamagaya <br>到着順: 2<br>risk_score: 11<br>累積距離: 19,054 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 20</b><br>拠点: Funabashi <br>到着順: 3<br>risk_score: 62<br>累積距離: 28,331 m<br>P2インセンティブ: ¥12<extra></extra>", "<b>車両 20</b><br>拠点: Chiba  Mihama Ward<br>到着順: 4<br>risk_score: 15<br>累積距離: 38,288 m<br>P2インセンティブ: ¥6<extra></extra>"], "marker": {"size": [8, 8, 8, 15.5, 8], "color": "#38bdf8", "opacity": 0.9}, "line": {"color": "#38bdf8", "width": 2}, "name": "車両 20"}, {"type": "scattermapbox", "lat": [35.6896, 35.6994705, 35.5929998, 35.6465615, 35.6091973], "lon": [139.7006, 139.6355204, 139.6146102, 139.6532924, 139.7303364], "mode": "markers+lines", "hovertemplate": ["<b>車両 21</b><br>拠点: Shinjuku_Staion<br>到着順: 0<br>risk_score: 0<br>累積距離: 0 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 21</b><br>拠点: Suginami Ward<br>到着順: 1<br>risk_score: 56<br>累積距離: 5,991 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 21</b><br>拠点: Chigasaki <br>到着順: 2<br>risk_score: 23<br>累積距離: 17,955 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 21</b><br>拠点: Setagaya Ward<br>到着順: 3<br>risk_score: 90<br>累積距離: 24,854 m<br>P2インセンティブ: ¥15<extra></extra>", "<b>車両 21</b><br>拠点: Shinagawa Ward<br>到着順: 4<br>risk_score: 39<br>累積距離: 32,971 m<br>P2インセンティブ: ¥14<extra></extra>"], "marker": {"size": [8, 14.0, 8, 22.5, 9.75], "color": "#4ade80", "opacity": 0.9}, "line": {"color": "#4ade80", "width": 2}, "name": "車両 21"}, {"type": "scattermapbox", "lat": [36.8712697, 36.6853883], "lon": [140.0153213, 139.9664416], "mode": "markers+lines", "hovertemplate": ["<b>車両 22</b><br>拠点: Otawara City<br>到着順: 0<br>risk_score: 8<br>累積距離: 0 m<br>P2インセンティブ: ¥18<extra></extra>", "<b>車両 22</b><br>拠点: Sakura City<br>到着順: 1<br>risk_score: 4<br>累積距離: 21,084 m<br>P2インセンティブ: ¥6<extra></extra>"], "marker": {"size": [8, 8], "color": "#c084fc", "opacity": 0.9}, "line": {"color": "#c084fc", "width": 2}, "name": "車両 22"}, {"type": "scattermapbox", "lat": [36.1471963, 36.0660069, 36.0086728, 35.9345047], "lon": [139.3889796, 139.3608153, 139.2970117, 139.3931269], "mode": "markers+lines", "hovertemplate": ["<b>車両 23</b><br>拠点: Kumagaya <br>到着順: 0<br>risk_score: 20<br>累積距離: 0 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 23</b><br>拠点: Namegawa Town<br>到着順: 1<br>risk_score: 2<br>累積距離: 9,358 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 23</b><br>拠点: Tokigawa Town<br>到着順: 2<br>risk_score: 1<br>累積距離: 17,933 m<br>P2インセンティブ: ¥13<extra></extra>", "<b>車両 23</b><br>拠点: Tsurugashima <br>到着順: 3<br>risk_score: 7<br>累積距離: 29,886 m<br>P2インセンティブ: ¥6<extra></extra>"], "marker": {"size": [8, 8, 8, 8], "color": "#fb7185", "opacity": 0.9}, "line": {"color": "#fb7185", "width": 2}, "name": "車両 23"}, {"type": "scattermapbox", "lat": [36.1843331, 36.1816174], "lon": [139.9673895, 139.8912133], "mode": "markers+lines", "hovertemplate": ["<b>車両 24</b><br>拠点: Shimotsuma City<br>到着順: 0<br>risk_score: 4<br>累積距離: 0 m<br>P2インセンティブ: ¥6<extra></extra>", "<b>車両 24</b><br>拠点: Yachiyo Town<br>到着順: 1<br>risk_score: 2<br>累積距離: 6,859 m<br>P2インセンティブ: ¥6<extra></extra>"], "marker": {"size": [8, 8], "color": "#34d399", "opacity": 0.9}, "line": {"color": "#34d399", "width": 2}, "name": "車両 24"}, {"type": "scattermapbox", "lat": [35.720454], "lon": [140.6466177], "mode": "markers+lines", "hovertemplate": ["<b>車両 25</b><br>拠点: Asahi <br>到着順: 0<br>risk_score: 7<br>累積距離: 0 m<br>P2インセンティブ: ¥6<extra></extra>"], "marker": {"size": [8], "color": "#60a5fa", "opacity": 0.9}, "line": {"color": "#60a5fa", "width": 2}, "name": "車両 25"}],
+  {"mapbox": {"style": "open-street-map", "center": {"lat": 35.826148712999995, "lon": 139.777103432}, "zoom": 12}, "height": 660, "margin": {"l": 0, "r": 0, "t": 44, "b": 0}, "title": {"text": "【統合配車地図】25台 × 100拠点 — SA-QUBO 最適化ルート", "font": {"size": 14, "color": "#e2e8f0"}}, "paper_bgcolor": "#111827", "legend": {"bgcolor": "rgba(11,15,26,0.85)", "bordercolor": "#1e2d47", "borderwidth": 1, "font": {"size": 10, "color": "#e2e8f0"}, "x": 0.01, "y": 0.99, "xanchor": "left", "yanchor": "top"}, "font": {"color": "#e2e8f0"}},
+  _common
+);
+
+// Section 4: フェーズ別処理時間
+Plotly.newPlot('ph',
+  [{"type": "bar", "orientation": "h", "y": ["VRP P1", "SA-QUBO P1", "VRP P2", "SA-QUBO P2"], "x": [0.989024, 0.009294, 26.063124, 4.556971], "marker": {"color": ["#3b82f6", "#00c9a7", "#f59e0b", "#a855f7"]}, "text": ["0.99s", "0.01s", "26.06s", "4.56s"], "textposition": "outside", "hovertemplate": "%{y}: %{x:.2f}s<extra></extra>"}],
+  Object.assign({
+    margin:{l:90,r:60,t:10,b:30},height:190,showlegend:false,
+    xaxis:Object.assign({title:'秒',autorange:true},_ax),
+    yaxis:Object.assign({autorange:'reversed'},_ax),
+  },_dark),
+  {responsive:true,displayModeBar:false}
+);
+
+// Section 5: 車両負荷バランス
+Plotly.newPlot('bal',
+  [{"type": "bar", "x": ["V1", "V2", "V3", "V4", "V5", "V6", "V7", "V8", "V9", "V10", "V11", "V12", "V13", "V14", "V15", "V16", "V17", "V18", "V19", "V20", "V21", "V22", "V23", "V24", "V25"], "y": [43916, 16952, 63540, 130456, 26146, 0, 36436, 42942, 53062, 61873, 92125, 74360, 29218, 16272, 87861, 14575, 17313, 24178, 27990, 38288, 32971, 21084, 29886, 6859, 0], "marker": {"color": ["rgba(0,201,167,.75)", "rgba(0,201,167,.75)", "rgba(0,201,167,.75)", "rgba(239,68,68,.75)", "rgba(0,201,167,.75)", "rgba(59,130,246,.75)", "rgba(0,201,167,.75)", "rgba(0,201,167,.75)", "rgba(0,201,167,.75)", "rgba(0,201,167,.75)", "rgba(239,68,68,.75)", "rgba(239,68,68,.75)", "rgba(0,201,167,.75)", "rgba(0,201,167,.75)", "rgba(239,68,68,.75)", "rgba(0,201,167,.75)", "rgba(0,201,167,.75)", "rgba(0,201,167,.75)", "rgba(0,201,167,.75)", "rgba(0,201,167,.75)", "rgba(0,201,167,.75)", "rgba(0,201,167,.75)", "rgba(0,201,167,.75)", "rgba(59,130,246,.75)", "rgba(59,130,246,.75)"]}, "text": ["43km", "16km", "63km", "130km", "26km", "0km", "36km", "42km", "53km", "61km", "92km", "74km", "29km", "16km", "87km", "14km", "17km", "24km", "27km", "38km", "32km", "21km", "29km", "6km", "0km"], "textposition": "outside", "hovertemplate": "%{x}: %{y:,}m<extra></extra>", "name": "担当距離"}],
+  Object.assign({
+    margin:{l:40,r:20,t:10,b:50},height:210,showlegend:false,
+    xaxis:Object.assign({title:'',tickfont:{size:9}},_ax),
+    yaxis:Object.assign({title:'距離(m)',tickfont:{size:9}},_ax),
+  },_dark),
+  {responsive:true,displayModeBar:false}
+);
+</script>
+</body>
+</html>

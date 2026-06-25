@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CLO 統合ダッシュボード — 経営者向け説明資料 利用ガイド</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;background:#f5f6f8;color:#1a1a2e;font-size:14px;line-height:1.7}
+.page{max-width:900px;margin:0 auto;padding:2rem 1.5rem 4rem}
+.cover{background:#042C53;color:#fff;border-radius:12px;padding:2rem 2rem 1.75rem;margin-bottom:2rem}
+.cover-eye{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#85B7EB;margin-bottom:0.4rem;font-weight:500}
+.cover-title{font-size:26px;font-weight:600;margin-bottom:0.4rem}
+.cover-sub{font-size:14px;color:#B5D4F4;margin-bottom:1.25rem}
+.cover-meta{display:grid;grid-template-columns:130px 1fr;gap:3px 12px;background:rgba(255,255,255,0.1);border-radius:8px;padding:0.75rem 1rem;font-size:13px}
+.cover-meta dt{color:#85B7EB;font-weight:500}
+.cover-meta dd{color:#e0eaf8}
+h1{font-size:20px;font-weight:600;color:#042C53;border-bottom:3px solid #185FA5;padding-bottom:0.45rem;margin:2.25rem 0 1rem}
+h2{font-size:16px;font-weight:600;color:#185FA5;padding-left:0.6rem;border-left:4px solid #185FA5;margin:1.75rem 0 0.65rem}
+h3{font-size:14px;font-weight:600;color:#333;padding-left:0.7rem;border-left:3px solid #B5D4F4;margin:1.25rem 0 0.5rem}
+p{color:#333;margin:0.4rem 0 0.65rem}
+ul{margin:0.3rem 0 0.65rem 1.4rem}
+li{margin:0.3rem 0;color:#333}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:0.6rem 0 1.2rem}
+th{background:#185FA5;color:#fff;padding:7px 11px;text-align:left;font-weight:500}
+td{padding:6px 11px;border-bottom:0.5px solid #dde1e7;vertical-align:top}
+tr:nth-child(even) td{background:#f8f9fb}
+.note{background:#FAEEDA;border-left:3px solid #BA7517;padding:0.5rem 0.75rem;border-radius:0 6px 6px 0;font-size:12px;color:#633806;margin:0.5rem 0 0.9rem}
+.tip{background:#EAF3DE;border-left:3px solid #639922;padding:0.5rem 0.75rem;border-radius:0 6px 6px 0;font-size:12px;color:#27500A;margin:0.5rem 0 0.9rem}
+.step-box{background:#fff;border:0.5px solid #dde1e7;border-radius:10px;padding:1rem 1.25rem;margin:0.6rem 0 1rem}
+.step-num{display:inline-flex;width:22px;height:22px;border-radius:50%;background:#185FA5;color:#fff;font-size:11px;font-weight:600;align-items:center;justify-content:center;margin-right:6px;flex-shrink:0;vertical-align:middle}
+.step-title{font-size:14px;font-weight:600;color:#042C53;margin-bottom:0.5rem;display:flex;align-items:center}
+.step-body{font-size:13px;color:#444;padding-left:28px}
+.panel-ref{display:inline-block;background:#E6F1FB;color:#0C447C;font-size:11px;font-weight:600;padding:1px 7px;border-radius:4px;margin:0 2px}
+code{background:#f0f2f5;padding:1px 5px;border-radius:3px;font-size:12px;color:#185FA5;font-family:monospace}
+.qa-item{background:#fff;border:0.5px solid #dde1e7;border-radius:8px;padding:0.75rem 1rem;margin:0.6rem 0}
+.qa-q{font-weight:600;color:#042C53;font-size:13px;margin-bottom:0.35rem}
+.qa-q::before{content:"Q. "}
+.qa-a{font-size:13px;color:#444;line-height:1.6}
+.qa-a::before{content:"A. ";font-weight:600;color:#185FA5}
+.footer-bar{display:flex;justify-content:space-between;align-items:center;margin-top:3rem;padding-top:0.75rem;border-top:0.5px solid #dde1e7;font-size:11px;color:#999}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="cover">
+  <div class="cover-eye">NEDO-4 プロジェクト / IBM 量子自動分割 確定版 v1.6-100</div>
+  <div class="cover-title">CLO 統合ダッシュボード<br>経営者向け説明資料　利用ガイド</div>
+  <div class="cover-sub">説明資料（1枚 HTML）の読み方・各パネルの活用方法・FAQ</div>
+  <dl class="cover-meta">
+    <dt>対象ドキュメント</dt><dd>CLO_Dashboard_経営者向け説明_v1.0.html</dd>
+    <dt>バージョン</dt><dd>v1.0</dd>
+    <dt>作成日</dt><dd>2026年6月</dd>
+    <dt>対象読者</dt><dd>経営幹部・CLO・物流企画担当者・役員プレゼン資料作成担当者</dd>
+  </dl>
+</div>
+
+<h1>1. この説明資料の目的と構成</h1>
+<p>本資料は、NEDO-4 量子物流最適化システムが生成する CLO 統合ダッシュボードの意義・読み方・活用法を、経営者・CLO が直感的に理解できるよう 1 ページに集約した説明資料（HTML）の利用ガイドである。</p>
+<h2>1.1 説明資料（HTML）の全体構成</h2>
+<table>
+  <tr><th>セクション</th><th>内容</th><th>主な読者</th></tr>
+  <tr><td>ヘッダー</td><td>システム名・バージョン・使用技術バッジ</td><td>全員</td></tr>
+  <tr><td>インパクト数値 4 点</td><td>対象拠点数・処理時間・クラスタ数・パネル数</td><td>経営幹部・CLO</td></tr>
+  <tr><td>全処理フロー</td><td>PHASE 1〜2 の 6 ステップを実測処理時間付きで表示</td><td>CLO・システム担当</td></tr>
+  <tr><td>パネル構成（A〜H）</td><td>8 パネルの名称・用途を一覧表示</td><td>全員</td></tr>
+  <tr><td>CLO の意思決定情報</td><td>配送最適化・予算配分・リスク管理の 3 観点</td><td>CLO・経営幹部</td></tr>
+  <tr><td>技術的差別化ポイント</td><td>量子技術・VRP 高速化の概要</td><td>技術担当・IT 役員</td></tr>
+</table>
+
+<h1>2. 説明資料の開き方と印刷</h1>
+
+<div class="step-box">
+  <div class="step-title"><span class="step-num">1</span>ブラウザで開く</div>
+  <div class="step-body">ファイル <code>CLO_Dashboard_経営者向け説明_v1.0.html</code> をダブルクリック、または Chrome / Edge / Safari にドラッグ＆ドロップする。インターネット接続・サーバー不要でローカルのみで動作する。</div>
+</div>
+<div class="step-box">
+  <div class="step-title"><span class="step-num">2</span>PDF として保存する</div>
+  <div class="step-body">ブラウザ上で <code>Ctrl+P</code>（Mac: <code>Cmd+P</code>) → 印刷先を「PDF に保存」に変更 → 用紙サイズ A4 / 横向き を選択 → 保存。印刷プレビューで 1 ページに収まることを確認してから保存する。</div>
+</div>
+<div class="step-box">
+  <div class="step-title"><span class="step-num">3</span>プレゼン資料（PowerPoint）に貼り付ける</div>
+  <div class="step-body">上記 PDF を画像変換ツール（例：Adobe Acrobat・オンラインツール）で PNG に変換し、PowerPoint スライドに挿入する。または PDF を直接スライドの背景として挿入することも可能。</div>
+</div>
+<div class="note">※ Internet Explorer では正しく表示されません。Chrome / Edge / Firefox / Safari（最新版）を使用してください。</div>
+
+<h1>3. 各セクションの読み方と CLO の活用法</h1>
+
+<h2>3.1 インパクト数値 4 点（最上部カード）</h2>
+<table>
+  <tr><th>カード</th><th>数値の意味</th><th>CLO の判断ポイント</th></tr>
+  <tr><td>対象拠点数：100</td><td>今回の最適化計算が対象とした配送・集荷拠点の総数</td><td>拠点数が増えても同じシステムで対応可能か確認</td></tr>
+  <tr><td>全処理時間：67s（旧比 −60%）</td><td>全 6 フェーズの計算が完了するまでの実測時間。旧バージョン比 60% 削減</td><td>意思決定のリードタイムとして利用。リアルタイム性の判断基準</td></tr>
+  <tr><td>クラスタ数：9（N_sub=12）</td><td>量子計算の分割数。100 拠点を 9 グループに分割し各グループ 12 拠点で並列計算</td><td>スケールアップ時（200 拠点等）の処理時間見積もりに活用</td></tr>
+  <tr><td>パネル数：8</td><td>CLO ダッシュボードに表示される可視化パネルの総数（A〜H）</td><td>どの画面を経営会議・現場報告に使うか事前に選定</td></tr>
+</table>
+
+<h2>3.2 全処理フロー</h2>
+<p>左から右に向かって PHASE 1（配送最適化）→ PHASE 2（量子強化・衛星連動）→ CLO ダッシュボード の順で処理が流れる。各ステップに実測処理時間を記載している。</p>
+<ul>
+  <li><strong>緑色の時間表示（〜2s 以下）</strong>：高速化済み。運用上の問題なし。</li>
+  <li><strong>橙色の時間表示（15s など）</strong>：動的 VRP は 100 拠点で 15s。許容範囲だが、拠点数増加時に監視が必要。</li>
+  <li><strong>青色「全 8 パネル」</strong>：CLO ダッシュボードの生成は 5 秒以内。全フェーズ完了後に自動表示される。</li>
+</ul>
+
+<h2>3.3 パネル構成（A〜H）</h2>
+<p>8 つのパネルは CLO の業務目的ごとに使い分ける。</p>
+<table>
+  <tr><th>業務目的</th><th>参照パネル</th><th>確認すべき内容</th></tr>
+  <tr><td>毎朝の配送計画確認</td><td><span class="panel-ref">A</span><span class="panel-ref">B</span></td><td>KPI サマリの VRP 総距離・Panel B の配送ルートマップで当日ルートを確認</td></tr>
+  <tr><td>インセンティブ予算承認</td><td><span class="panel-ref">C</span><span class="panel-ref">D</span><span class="panel-ref">E</span></td><td>P1（静的）vs P2（動的）の配分額差、リスクスコアとの相関を確認して配分根拠を作成</td></tr>
+  <tr><td>リスク拠点の優先対応</td><td><span class="panel-ref">F</span><span class="panel-ref">H</span></td><td>Panel F の赤色が濃い拠点を高優先度として対応。Panel H でリスク変化傾向を把握</td></tr>
+  <tr><td>IT・量子システム投資判断</td><td><span class="panel-ref">G</span></td><td>QAOA・VRP 各フェーズの処理時間内訳を確認。処理ボトルネックの特定と改善投資の判断</td></tr>
+  <tr><td>経営会議・役員報告</td><td><span class="panel-ref">A</span></td><td>Panel A の 11 KPI を抜粋してスライドに転記。全指標が 1 画面に収まる</td></tr>
+</table>
+
+<h2>3.4 CLO が得られる意思決定情報（左下カード）</h2>
+<p>3 つの観点（配送最適化 / 予算配分 / リスク管理）で整理されている。経営会議での口頭説明の流れにそのまま使える構成になっている。</p>
+<div class="tip">プレゼン活用例：「まず配送ルートの最適化結果（Panel B）を示し、次に P1/P2 のインセンティブ比較（Panel C）で動的最適化の効果を説明、最後に高リスク拠点への重点配分状況（Panel F）で締めくくる」という 3 ステップの説明が自然にできます。</div>
+
+<h2>3.5 技術的差別化ポイント（右下テーブル）</h2>
+<p>IT 役員・技術担当者への説明用。「なぜ量子技術を使うのか」という問いに対して、各技術要素が何を解決しているかを 7 行で簡潔に示している。</p>
+
+<h1>4. データの更新と再実行</h1>
+<table>
+  <tr><th>操作</th><th>手順</th><th>所要時間目安</th></tr>
+  <tr><td>新しい拠点データで再計算</td><td>Google Colab で CSV をアップロード → セルを全実行（Run all）</td><td>約 67 秒（n_nodes=100 の場合）</td></tr>
+  <tr><td>ダッシュボード画面の更新</td><td>全セル実行完了後に自動で 8 パネルが順次表示される</td><td>処理後 5 秒以内</td></tr>
+  <tr><td>説明資料（HTML）の数値更新</td><td>実験ログの数値を手動で HTML ファイル内の該当箇所に反映する</td><td>5〜10 分</td></tr>
+</table>
+<div class="note">※ 本説明資料（HTML）の数値は最終実行時の実測値を手動記載したものです。計算を再実行した場合は HTML ファイル内の数値（67s / 100 拠点など）を実験ログに合わせて更新してください。</div>
+
+<h1>5. よくある質問（FAQ）</h1>
+<div class="qa-item">
+  <div class="qa-q">HTML ファイルを開くとレイアウトが崩れる</div>
+  <div class="qa-a">Internet Explorer では対応していません。Chrome・Edge・Safari・Firefox の最新版をご使用ください。また、ブラウザのズームが 100% 以外の場合にレイアウトが若干崩れることがあります。Ctrl+0 でズームをリセットしてください。</div>
+</div>
+<div class="qa-item">
+  <div class="qa-q">印刷すると複数ページに分かれてしまう</div>
+  <div class="qa-a">印刷時に「用紙サイズ：A4 / 向き：横向き」「倍率：合わせる（または 80〜85%）」に設定してください。Chrome の印刷プレビューで 1 ページに収まることを確認してから印刷・PDF 保存してください。</div>
+</div>
+<div class="qa-item">
+  <div class="qa-q">ダッシュボードの実際の画面（Plotly グラフ）はどこで見られるか</div>
+  <div class="qa-a">Plotly グラフはプログラム実行時に Google Colab のセル出力としてインタラクティブに表示されます。本 HTML は経営者向けの静的な概要説明資料であり、インタラクティブな操作は Colab 環境で行います。</div>
+</div>
+<div class="qa-item">
+  <div class="qa-q">「旧比 −60%」の比較基準はどこか</div>
+  <div class="qa-a">v1.2-100（初期版）と v1.6-100（現行版）の n_nodes=100 実行時の合計処理時間を比較したものです。旧バージョン約 170 秒 → 現行バージョン 67 秒で、約 60% の処理時間削減を達成しています。</div>
+</div>
+<div class="qa-item">
+  <div class="qa-q">拠点数が 100 以外の場合、処理時間はどう変わるか</div>
+  <div class="qa-a">VRP のクラスタ数と time_limit が n_nodes に応じて自動調整されます。目安として n_nodes=50 では約 30〜40 秒、n_nodes=200 ではクラスタ数が増加し 120〜150 秒程度が見込まれます。詳細は詳細設計書の get_experiment_config() 仕様を参照してください。</div>
+</div>
+
+<div class="footer-bar">
+  <span>NEDO-4 プロジェクト / 社外秘　　CLO 統合ダッシュボード 経営者向け説明資料 利用ガイド v1.0</span>
+  <span>2026年6月</span>
+</div>
+
+</div>
+</body>
+</html>
